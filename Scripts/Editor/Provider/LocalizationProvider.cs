@@ -52,7 +52,10 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             _settings.Update();
             LocalizationSettings.Singleton.UpdateContent();
 
-            if (LocalizationSettings.Singleton.SupportedLanguages.GroupBy(x => x).Any(x => x.Count() > 1))
+            var lanDoublet = LocalizationSettings.Singleton.SupportedLanguages.GroupBy(x => x).Any(x => x.Count() > 1);
+            var keyDoublet = LocalizationSettings.Singleton.Content.GroupBy(x => x.Key).Any(x => x.Count() > 1);
+            
+            if (lanDoublet)
             {
                 EditorGUILayout.HelpBox("There are doublet language items in supported language list. Please fix this!", MessageType.Warning);
             }
@@ -67,7 +70,18 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Value Table", EditorStyles.boldLabel);
-            _contentList.DoLayoutList();
+            if (keyDoublet)
+            {
+                EditorGUILayout.HelpBox("There are key doublets. Please fix this to avoid wrong text choices.", MessageType.Warning);
+            }
+            if (!lanDoublet)
+            {
+                _contentList.DoLayoutList();
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("Please fix doublet problem above!", MessageType.Error);
+            }
 
             LocalizationSettings.Singleton.UpdateContent();
             _settings.ApplyModifiedProperties();

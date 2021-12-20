@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using UnityEditor;
 using UnityEngine;
+using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils.Extensions;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 {
@@ -52,7 +53,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private SystemLanguage fallbackLanguage = SystemLanguage.English;
 
         [SerializeField]
-        private LocalizedText[] content = Array.Empty<LocalizedText>();
+        private LocalizedTextRow[] content = Array.Empty<LocalizedTextRow>();
 
         #endregion
 
@@ -68,7 +69,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 #endif
         }
 
-        public LocalizedText[] Content
+        public LocalizedTextRow[] Content
         {
             get => content;
 #if UNITY_EDITOR
@@ -101,91 +102,5 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
             }
         }
 #endif
-    }
-
-    [Serializable]
-    [KnownType(typeof(LocalizedText))]
-    public abstract class LocalizedRow
-    {
-        #region Inspector Data
-
-        [SerializeField]
-        private string key;
-
-        #endregion
-
-        #region Properties
-
-        public string Key
-        {
-            get => key;
-#if UNITY_EDITOR
-            set => key = value;
-#endif
-        }
-
-        #endregion
-    }
-
-    [Serializable]
-    public abstract class LocalizedRow<T> : LocalizedRow
-    {
-        #region Inspector Data
-
-        [SerializeField]
-        private LocalizedElement<T>[] columns;
-
-        #endregion
-
-        #region Properties
-
-        public LocalizedElement<T>[] Columns
-        {
-            get => columns;
-#if UNITY_EDITOR
-            set => columns = value;
-#endif
-        }
-
-        #endregion
-    }
-
-    [Serializable]
-    public sealed class LocalizedText : LocalizedRow<string>
-    {
-    }
-
-    [Serializable]
-    public sealed class LocalizedElement<T>
-    {
-        #region Inspector Data
-
-        [SerializeField]
-        private SystemLanguage language = SystemLanguage.English;
-
-        [SerializeField]
-        private T value;
-
-        #endregion
-
-        #region Properties
-
-        public SystemLanguage Language
-        {
-            get => language;
-#if UNITY_EDITOR
-            set => language = value;
-#endif
-        }
-
-        public T Value
-        {
-            get => value;
-#if UNITY_EDITOR
-            set => this.value = value;
-#endif
-        }
-
-        #endregion
     }
 }

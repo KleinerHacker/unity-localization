@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
@@ -20,6 +21,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             onAddCallback += OnAddCallback;
             onRemoveCallback += OnRemoveCallback;
             elementHeight = Height;
+            multiSelect = false;
         }
 
         private void OnDrawElementCallback(Rect rect, int index, bool active, bool focused)
@@ -52,7 +54,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         private void OnAddCallback(ReorderableList list)
         {
-            var localizedText = new LocalizedText
+            var localizedText = new LocalizedTextRow
             {
                 Key = "my.key",
                 Columns = LocalizationSettings.Singleton.SupportedLanguages.Select(x => new LocalizedElement<string> { Language = x, Value = "text" }).ToArray()
@@ -63,6 +65,9 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         private void OnRemoveCallback(ReorderableList list)
         {
+            var tmp = LocalizationSettings.Singleton.Content.ToList();
+            tmp.RemoveAt(list.index);
+            LocalizationSettings.Singleton.Content = tmp.ToArray();
         }
     }
 }
