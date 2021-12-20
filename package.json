@@ -1,0 +1,19 @@
+{
+  "name": "org.pcsoft.localization",
+  "version": "1.0.0",
+  "displayName": "Unity Localization",
+  "description": "Localization system for Unity games.",
+  "unity": "2021.1",
+  "keywords": [
+    "editor",
+    "localization",
+    "tooling",
+    "language",
+    "locale"
+  ],
+  "author": {
+    "name": "Pfeiffer C Soft",
+    "email": "kl3in3rhack3r@gmail.com",
+    "url": "https://github.com/KleinerHacker/unity-localization"
+  }
+}
