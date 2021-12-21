@@ -535,6 +535,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d7f5141c5a94ac18f87ec3f07b2cc85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textRef:
+    key: dialog/a
+  spriteRef:
+    key: sprite/key
+  materialRef:
+    key: material/key
 --- !u!1 &1442343942
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,7 +907,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Fialog Text
+  m_Text: Dialog Text
 --- !u!222 &2144119373
 CanvasRenderer:
   m_ObjectHideFlags: 0
