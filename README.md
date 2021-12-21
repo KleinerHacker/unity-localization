@@ -36,5 +36,13 @@ Use a '/' to create a sub menu in case of choising a key. See below.
 
 Each key dropdown of this components shows only the fit keys. Values will update at editor time initial. In game it will update with first frame (method `Start`).
 
+### References
+For usage in custom components or assets there are reference types with implicit operators:
+* `LocalizedTextRef`
+* `LocalizedSpriteRef`
+* `LocalizedMaterialRef`
+
+For this types an editor is implemented.
+
 ### Change Language at Runtime
 Use the class `UnityLocale` to access current settings and change language via `CurrentLanguage`.
