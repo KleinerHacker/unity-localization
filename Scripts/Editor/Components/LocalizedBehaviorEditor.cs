@@ -20,8 +20,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            
-            LocalizedEditorUtils.OnGUIRowFilter(_keyProperty, OnFilterRow);
+
+            if (string.IsNullOrWhiteSpace(_keyProperty.stringValue))
+            {
+                EditorGUILayout.HelpBox("No key ist set. Value will not changed at runtime!", MessageType.Warning);
+            }
+            LocalizedEditorUtils.OnGUIRowFilter(_keyProperty.displayName, _keyProperty, OnFilterRow);
             
             serializedObject.ApplyModifiedProperties();
         }
