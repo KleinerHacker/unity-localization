@@ -24,6 +24,8 @@ To setup your keys change to project settings and search for `Localization` tab.
 
 Use a '/' to create a sub menu in case of choising a key. See below.
 
+![demo](https://github.com/KleinerHacker/unity-localization/blob/7b15cdf4fbfd4a92ce57d0804c26077da62cf606/Doc/demo.png)
+
 ### Components
 * For Texts
   * Localized Text
@@ -44,5 +46,6 @@ For usage in custom components or assets there are reference types with implicit
 
 For this types an editor is implemented.
 
-### Change Language at Runtime
-Use the class `UnityLocale` to access current settings and change language via `CurrentLanguage`.
+### Change Language
+* At runtime - Use the class `UnityLocale` to access current settings and change language via `CurrentLanguage`.
+* At editor time - Use `Language` menu in unity to change in scene texts to preview other languages.
