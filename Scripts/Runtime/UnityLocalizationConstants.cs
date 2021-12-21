@@ -8,7 +8,9 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime
         {
             public static class Component
             {
-                public const string Root = UnityLocalizationConstants.Root;
+                public const string UIMenu = Root + "/UI";
+                public const string MeshMenu = Root + "/Mesh";
+                public const string SceneMenu = Root + "/Scene";
             }
         }
     }

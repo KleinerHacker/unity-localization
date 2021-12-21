@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityLocalization.Runtime.localization.Scripts.Runtime;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
 
 namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
@@ -25,9 +26,13 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         private SerializedObject _settings;
         private SerializedProperty _supportedLanguagesProperty;
         private SerializedProperty _fallbackLanguageProperty;
-        private SerializedProperty _contentProperty;
+        private SerializedProperty _textRowsProperty;
+        private SerializedProperty _spriteRowsProperty;
+        private SerializedProperty _materialRowsProperty;
 
-        private LocalizationList _contentList;
+        private LocalizationList _textRowList;
+        private LocalizationList _spriteRowList;
+        private LocalizationList _materialRowList;
 
         public LocalizationProvider() :
             base("Project/Localization", SettingsScope.Project, new[] { "Localization", "Locale", "Language" })
@@ -42,18 +47,22 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
             _supportedLanguagesProperty = _settings.FindProperty("supportedLanguages");
             _fallbackLanguageProperty = _settings.FindProperty("fallbackLanguage");
-            _contentProperty = _settings.FindProperty("content");
+            _textRowsProperty = _settings.FindProperty("textRows");
+            _spriteRowsProperty = _settings.FindProperty("spriteRows");
+            _materialRowsProperty = _settings.FindProperty("materialRows");
 
-            _contentList = new LocalizationList(_settings, _contentProperty);
+            _textRowList = new LocalizationTextList(_settings, _textRowsProperty);
+            _spriteRowList = new LocalizationSpriteList(_settings, _spriteRowsProperty);
+            _materialRowList = new LocalizationMaterialList(_settings, _materialRowsProperty);
         }
 
         public override void OnGUI(string searchContext)
         {
             _settings.Update();
-            LocalizationSettings.Singleton.UpdateContent();
+            UnityLocalize.Settings.UpdateContent();
 
-            var lanDoublet = LocalizationSettings.Singleton.SupportedLanguages.GroupBy(x => x).Any(x => x.Count() > 1);
-            var keyDoublet = LocalizationSettings.Singleton.Content.GroupBy(x => x.Key).Any(x => x.Count() > 1);
+            var lanDoublet = UnityLocalize.Settings.SupportedLanguages.GroupBy(x => x).Any(x => x.Count() > 1);
+            var keyDoublet = UnityLocalize.Settings.Rows.GroupBy(x => x.Key).Any(x => x.Count() > 1);
             
             if (lanDoublet)
             {
@@ -61,29 +70,37 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             }
 
             EditorGUILayout.PropertyField(_supportedLanguagesProperty, new GUIContent("Supported Languages"));
-            var index = LocalizationSettings.Singleton.SupportedLanguages.IndexOf(x => x == LocalizationSettings.Singleton.FallbackLanguage);
-            index = EditorGUILayout.Popup(new GUIContent("Fallback Language"), index, LocalizationSettings.Singleton.SupportedLanguages.Select(x => x.ToString()).ToArray());
+            var index = UnityLocalize.Settings.SupportedLanguages.IndexOf(x => x == UnityLocalize.Settings.FallbackLanguage);
+            index = EditorGUILayout.Popup(new GUIContent("Fallback Language"), index, UnityLocalize.Settings.SupportedLanguages.Select(x => x.ToString()).ToArray());
             if (index >= 0)
             {
-                LocalizationSettings.Singleton.FallbackLanguage = LocalizationSettings.Singleton.SupportedLanguages[index];
+                UnityLocalize.Settings.FallbackLanguage = UnityLocalize.Settings.SupportedLanguages[index];
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Value Table", EditorStyles.boldLabel);
             if (keyDoublet)
             {
                 EditorGUILayout.HelpBox("There are key doublets. Please fix this to avoid wrong text choices.", MessageType.Warning);
             }
             if (!lanDoublet)
             {
-                _contentList.DoLayoutList();
-            }
+                EditorGUILayout.LabelField("Text Values", EditorStyles.boldLabel);
+                _textRowList.DoLayoutList();
+                
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("Sprite Values", EditorStyles.boldLabel);
+                _spriteRowList.DoLayoutList();
+                
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("Material Values", EditorStyles.boldLabel);
+                _materialRowList.DoLayoutList();
+            } 
             else
             {
                 EditorGUILayout.HelpBox("Please fix doublet problem above!", MessageType.Error);
             }
 
-            LocalizationSettings.Singleton.UpdateContent();
+            UnityLocalize.Settings.UpdateContent();
             _settings.ApplyModifiedProperties();
         }
     }

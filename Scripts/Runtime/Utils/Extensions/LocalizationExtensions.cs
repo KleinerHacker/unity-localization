@@ -9,20 +9,11 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils.Extension
     {
         public static LocalizedElement<T> Find<T>(this LocalizedElement<T>[] list)
         {
-            var element = list.FirstOrDefault(x => x.Language == Application.systemLanguage);
+            var element = list.FirstOrDefault(x => x.Language == UnityLocalize.CurrentLanguage);
             if (element == null || element.Value == null)
-                return list.FirstOrDefault(x => x.Language == LocalizationSettings.Singleton.FallbackLanguage);
+                return list.FirstOrDefault(x => x.Language == UnityLocalize.Settings.FallbackLanguage);
 
             return element;
-        }
-
-        public static LocalizedElement<T> Find<T, TL>(this TL[] rows, string key) where TL : LocalizedRow<T>
-        {
-            var row = rows.FirstOrDefault(x => x.Key == key);
-            if (row == null)
-                return null;
-
-            return row.Columns.Find();
         }
     }
 }

@@ -11,6 +11,11 @@
     "language",
     "locale"
   ],
+  "dependencies": {
+    "org.pcsoft.editor-ex":"1.1.0",
+    "org.pcsoft.common-ex":"1.0.5",
+    "org.pcsoft.asset-loader":"1.1.0"
+  },
   "author": {
     "name": "Pfeiffer C Soft",
     "email": "kl3in3rhack3r@gmail.com",

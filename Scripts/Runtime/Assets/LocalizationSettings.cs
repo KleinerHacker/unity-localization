@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
-using System.Runtime.Serialization;
+#if !UNITY_EDITOR
+using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
+#endif
 using UnityEditor;
 using UnityEngine;
-using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils.Extensions;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 {
@@ -53,7 +54,13 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private SystemLanguage fallbackLanguage = SystemLanguage.English;
 
         [SerializeField]
-        private LocalizedTextRow[] content = Array.Empty<LocalizedTextRow>();
+        private LocalizedTextRow[] textRows = Array.Empty<LocalizedTextRow>();
+
+        [SerializeField]
+        private LocalizedSpriteRow[] spriteRows = Array.Empty<LocalizedSpriteRow>();
+
+        [SerializeField]
+        private LocalizedMaterialRow[] materialRows = Array.Empty<LocalizedMaterialRow>();
 
         #endregion
 
@@ -69,11 +76,21 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 #endif
         }
 
-        public LocalizedTextRow[] Content
+        public LocalizedRow[] Rows
         {
-            get => content;
+            get => textRows.Concat(
+                    spriteRows.Concat(
+                        materialRows.Cast<LocalizedRow>()
+                    )
+                )
+                .ToArray();
 #if UNITY_EDITOR
-            set => content = value;
+            set
+            {
+                textRows = value.Where(x => x is LocalizedTextRow).Cast<LocalizedTextRow>().ToArray();
+                spriteRows = value.Where(x => x is LocalizedSpriteRow).Cast<LocalizedSpriteRow>().ToArray();
+                materialRows = value.Where(x => x is LocalizedMaterialRow).Cast<LocalizedMaterialRow>().ToArray();
+            }
 #endif
         }
 
@@ -82,23 +99,21 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 #if UNITY_EDITOR
         public void UpdateContent()
         {
-            foreach (var row in content)
+            foreach (var row in Rows)
             {
-                if (row.Columns.Length == SupportedLanguages.Length)
+                if (row.RawColumns.Length == SupportedLanguages.Length)
                     continue;
 
                 var addedList = SupportedLanguages
-                    .Where(x => !row.Columns.Select(x => x.Language).Contains(x))
+                    .Where(x => !row.RawColumns.Select(y => y.Language).Contains(x))
                     .ToArray();
-                var removedList = row.Columns
+                var removedList = row.RawColumns
                     .Select(x => x.Language)
                     .Where(x => !SupportedLanguages.Contains(x))
                     .ToArray();
 
-                //Remove
-                row.Columns = row.Columns.Where(x => !removedList.Contains(x.Language)).ToArray();
-                //Add
-                row.Columns = row.Columns.Concat(addedList.Select(x => new LocalizedElement<string> { Language = x, Value = "text" })).ToArray();
+                row.RemoveColumns(removedList);
+                row.AddColumns(addedList);
             }
         }
 #endif

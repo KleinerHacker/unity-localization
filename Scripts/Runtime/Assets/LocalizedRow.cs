@@ -1,12 +1,11 @@
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using UnityEngine;
-using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils.Extensions;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 {
     [Serializable]
-    [KnownType(typeof(LocalizedTextRow))]
     public abstract class LocalizedRow
     {
         #region Inspector Data
@@ -18,6 +17,8 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
         #region Properties
 
+        public abstract LocalizedElement[] RawColumns { get; }
+
         public string Key
         {
             get => key;
@@ -27,6 +28,12 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         }
 
         #endregion
+
+#if UNITY_EDITOR
+        public abstract void RemoveColumns(SystemLanguage[] removedLanguages);
+
+        public abstract void AddColumns(SystemLanguage[] addedLanguages);
+#endif
     }
 
     [Serializable]
@@ -41,6 +48,8 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
         #region Properties
 
+        public override LocalizedElement[] RawColumns => columns.Cast<LocalizedElement>().ToArray();
+
         public LocalizedElement<T>[] Columns
         {
             get => columns;
@@ -50,45 +59,64 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         }
 
         #endregion
+
+#if UNITY_EDITOR
+        public override void RemoveColumns(SystemLanguage[] removedLanguages)
+        {
+            columns = columns.Where(x => !removedLanguages.Contains(x.Language)).ToArray();
+        }
+
+        public override void AddColumns(SystemLanguage[] addedLanguages)
+        {
+            columns = columns.Concat(addedLanguages.Select(CreateElement)).ToArray();
+        }
+
+        public abstract LocalizedElement<T> CreateElement(SystemLanguage language);
+#endif
     }
 
     [Serializable]
     public sealed class LocalizedTextRow : LocalizedRow<string>
     {
-        public static implicit operator string(LocalizedTextRow row) => row.Columns.Find()?.Value ?? "";
+#if UNITY_EDITOR
+        public override LocalizedElement<string> CreateElement(SystemLanguage language)
+        {
+            return new LocalizedElement<string>
+            {
+                Language = language,
+                Value = "my.key",
+            };
+        }
+#endif
     }
-
+    
     [Serializable]
-    public sealed class LocalizedElement<T>
+    public sealed class LocalizedSpriteRow : LocalizedRow<Sprite>
     {
-        #region Inspector Data
-
-        [SerializeField]
-        private SystemLanguage language = SystemLanguage.English;
-
-        [SerializeField]
-        private T value;
-
-        #endregion
-
-        #region Properties
-
-        public SystemLanguage Language
-        {
-            get => language;
 #if UNITY_EDITOR
-            set => language = value;
-#endif
-        }
-
-        public T Value
+        public override LocalizedElement<Sprite> CreateElement(SystemLanguage language)
         {
-            get => value;
-#if UNITY_EDITOR
-            set => this.value = value;
-#endif
+            return new LocalizedElement<Sprite>
+            {
+                Language = language,
+                Value = null,
+            };
         }
-
-        #endregion
+#endif
+    }
+    
+    [Serializable]
+    public sealed class LocalizedMaterialRow : LocalizedRow<Material>
+    {
+#if UNITY_EDITOR
+        public override LocalizedElement<Material> CreateElement(SystemLanguage language)
+        {
+            return new LocalizedElement<Material>
+            {
+                Language = language,
+                Value = null,
+            };
+        }
+#endif
     }
 }
