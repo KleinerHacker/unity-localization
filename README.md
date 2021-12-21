@@ -48,4 +48,4 @@ For this types an editor is implemented.
 
 ### Change Language
 * At runtime - Use the class `UnityLocale` to access current settings and change language via `CurrentLanguage`.
-* At editor time - Use `Language` menu in unity to change in scene texts to preview other languages.
+* At editor time - Use `Languages` menu in unity to change in scene texts to preview other languages.
