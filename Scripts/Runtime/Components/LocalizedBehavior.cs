@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
@@ -13,7 +14,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 
         internal abstract void UpdateLanguage();
     }
-    
+
     public abstract class LocalizedBehavior<T, TE> : LocalizedBehavior where TE : Component
     {
         private TE _element;
@@ -34,12 +35,31 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
         private void UpdateValue(TE element)
         {
             var value = GetValue(key);
-            UpdateElement(value, element);
+            if (value != null)
+            {
+                UpdateElement(value, element);
+            }
         }
 
         protected abstract T GetValue(string key);
         protected abstract void UpdateElement(T value, TE element);
 
-        internal sealed override void UpdateLanguage() => UpdateValue(_element);
+        internal sealed override void UpdateLanguage()
+        {
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying)
+            {
+                Debug.Log("Update language in editor");
+                UpdateValue(GetComponent<TE>());
+            }
+            else
+            {
+#endif
+                Debug.Log("Update language in play mode");
+                UpdateValue(_element);
+#if UNITY_EDITOR
+            }
+#endif
+        }
     }
 }

@@ -17,6 +17,8 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
         private static T GetValue<T, TR>(string key) where TR : LocalizedRow<T> where T : class
         {
             var row = UnityLocalize.Settings.Rows.FirstOrDefault(x => x.Key == key);
+            if (row == null)
+                return default;
             if (row is not TR typedRow)
                 throw new InvalidOperationException("Requires " + typeof(T).Name + " key!");
 
