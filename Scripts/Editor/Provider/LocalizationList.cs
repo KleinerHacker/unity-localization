@@ -28,6 +28,22 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             _supportedLanguagesProperty = serializedObject.FindProperty("supportedLanguages");
         }
 
+        private void OnDrawHeaderCallback(Rect rect)
+        {
+            var parts = (rect.width - LeftMargin) / (_supportedLanguagesProperty.arraySize + 1);
+
+            var pos = new Rect(rect.x + LeftMargin, rect.y, parts, rect.height);
+            EditorGUI.LabelField(pos, "Key");
+
+            for (var i = 0; i < _supportedLanguagesProperty.arraySize; i++)
+            {
+                var supportedLanguageProperty = _supportedLanguagesProperty.GetArrayElementAtIndex(i);
+
+                pos = new Rect(rect.x + LeftMargin + parts * (i + 1), rect.y, parts, rect.height);
+                EditorGUI.LabelField(pos, supportedLanguageProperty.enumDisplayNames[supportedLanguageProperty.enumValueIndex]);
+            }
+        }
+
         private void OnDrawElementCallback(Rect rect, int index, bool active, bool focused)
         {
             var contentProperty = serializedProperty.GetArrayElementAtIndex(index);
@@ -45,22 +61,6 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
                 pos = new Rect(rect.x + parts * (i + 1), rect.y, parts - SpaceMargin, rect.height - BottomMargin);
                 EditorGUI.PropertyField(pos, valueProperty, GUIContent.none);
-            }
-        }
-
-        private void OnDrawHeaderCallback(Rect rect)
-        {
-            var parts = (rect.width - LeftMargin) / (_supportedLanguagesProperty.arraySize + 1);
-
-            var pos = new Rect(rect.x + LeftMargin, rect.y, parts, rect.height);
-            EditorGUI.LabelField(pos, "Key");
-
-            for (var i = 0; i < _supportedLanguagesProperty.arraySize; i++)
-            {
-                var supportedLanguageProperty = _supportedLanguagesProperty.GetArrayElementAtIndex(i);
-
-                pos = new Rect(rect.x + LeftMargin + parts * (i + 1), rect.y, parts, rect.height);
-                EditorGUI.LabelField(pos, supportedLanguageProperty.enumDisplayNames[supportedLanguageProperty.enumValueIndex]);
             }
         }
 
