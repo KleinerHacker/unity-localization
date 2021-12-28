@@ -46,6 +46,12 @@ For usage in custom components or assets there are reference types with implicit
 
 For this types an editor is implemented.
 
+### Text Editing
+Change this value to setup an automatic text editing for example fonts that use only upper or lower cases.
+
+### Transliteration
+This feature allows to create a transliteration table for each language. So you can transliterate characters that is not supported by gaming font, like ä -> ae.
+
 ### Change Language
 * At runtime - Use the class `UnityLocale` to access current settings and change language via `CurrentLanguage`.
 * At editor time - Use `Languages` menu in unity to change in scene texts to preview other languages.
