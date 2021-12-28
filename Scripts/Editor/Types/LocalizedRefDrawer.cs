@@ -11,7 +11,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var keyProperty = property.FindPropertyRelative("key");
-            LocalizedEditorUtils.OnGUIRowFilter(property.displayName, keyProperty, OnFilterRow, position);
+            LocalizedEditorUtils.OnGUIRowFilter(property.displayName, keyProperty, OnFilterRow, new Rect(position.x, position.y, position.width, lineHeight));
         }
         
         protected abstract bool OnFilterRow(LocalizedRow row);

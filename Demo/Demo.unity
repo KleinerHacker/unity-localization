@@ -251,6 +251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: dialog/a
+  overrideTextEditing: 0
+  overriddenTextEditing: 0
 --- !u!114 &714061350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,6 +389,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: button/switch
+  overrideTextEditing: 0
+  overriddenTextEditing: 0
 --- !u!1 &1030662599
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,6 +878,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: dialog/b
+  overrideTextEditing: 0
+  overriddenTextEditing: 0
 --- !u!114 &2144119372
 MonoBehaviour:
   m_ObjectHideFlags: 0

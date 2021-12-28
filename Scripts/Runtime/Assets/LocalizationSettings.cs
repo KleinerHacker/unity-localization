@@ -62,6 +62,12 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         [SerializeField]
         private LocalizedMaterialRow[] materialRows = Array.Empty<LocalizedMaterialRow>();
 
+        [SerializeField]
+        private LocalizationTransliteration[] transliterations = Array.Empty<LocalizationTransliteration>();
+
+        [SerializeField]
+        private LocalizationTextEditing textEditing = LocalizationTextEditing.None;
+
         #endregion
 
         #region Properties
@@ -94,6 +100,10 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 #endif
         }
 
+        public LocalizationTransliteration[] Transliterations => transliterations;
+
+        public LocalizationTextEditing TextEditing => textEditing;
+
         #endregion
 
 #if UNITY_EDITOR
@@ -115,7 +125,32 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
                 row.RemoveColumns(removedList);
                 row.AddColumns(addedList);
             }
+
+            if (transliterations.Length != SupportedLanguages.Length)
+            {
+                var addedList = SupportedLanguages
+                    .Where(x => transliterations.All(y => y.Language != x))
+                    .ToArray();
+                var removedList = transliterations
+                    .Select(x => x.Language)
+                    .Where(x => !SupportedLanguages.Contains(x))
+                    .ToArray();
+
+                transliterations = transliterations.Where(x => !removedList
+                    .Contains(x.Language))
+                    .ToArray();
+                transliterations = transliterations
+                    .Concat(addedList.Select(x => new LocalizationTransliteration { Language = x }).ToArray())
+                    .ToArray();
+            } 
         }
 #endif
+    }
+
+    public enum LocalizationTextEditing
+    {
+        None,
+        LowerCase,
+        UpperCase
     }
 }

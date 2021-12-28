@@ -29,10 +29,13 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         private SerializedProperty _textRowsProperty;
         private SerializedProperty _spriteRowsProperty;
         private SerializedProperty _materialRowsProperty;
+        private SerializedProperty _transliterationProperty;
+        private SerializedProperty _textEditingProperty;
 
         private LocalizationList _textRowList;
         private LocalizationList _spriteRowList;
         private LocalizationList _materialRowList;
+        private (SystemLanguage, TransliterationList)[] _transliterationLists = Array.Empty<(SystemLanguage, TransliterationList)>();
 
         public LocalizationProvider() :
             base("Project/Localization", SettingsScope.Project, new[] { "Localization", "Locale", "Language" })
@@ -50,10 +53,19 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             _textRowsProperty = _settings.FindProperty("textRows");
             _spriteRowsProperty = _settings.FindProperty("spriteRows");
             _materialRowsProperty = _settings.FindProperty("materialRows");
+            _transliterationProperty = _settings.FindProperty("transliterations");
+            _textEditingProperty = _settings.FindProperty("textEditing");
 
             _textRowList = new LocalizationTextList(_settings, _textRowsProperty);
             _spriteRowList = new LocalizationSpriteList(_settings, _spriteRowsProperty);
             _materialRowList = new LocalizationMaterialList(_settings, _materialRowsProperty);
+            UpdateTransliterationLists();
+        }
+
+        public override void OnInspectorUpdate()
+        {
+            base.OnInspectorUpdate();
+            UpdateTransliterationLists();
         }
 
         public override void OnGUI(string searchContext)
@@ -77,6 +89,8 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
                 UnityLocalize.Settings.FallbackLanguage = UnityLocalize.Settings.SupportedLanguages[index];
             }
 
+            EditorGUILayout.PropertyField(_textEditingProperty, new GUIContent("Mode for text editing", "This can overwritten in components"));
+
             EditorGUILayout.Space();
             if (keyDoublet)
             {
@@ -99,9 +113,31 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             {
                 EditorGUILayout.HelpBox("Please fix doublet problem above!", MessageType.Error);
             }
+            
+            EditorGUILayout.Space();
+            foreach (var transliterationList in _transliterationLists)
+            {
+                EditorGUILayout.LabelField("Transliteration for " + transliterationList.Item1, EditorStyles.boldLabel);
+                transliterationList.Item2.DoLayoutList();
+            }
 
             UnityLocalize.Settings.UpdateContent();
             _settings.ApplyModifiedProperties();
+        }
+
+        private void UpdateTransliterationLists()
+        {
+            if (_transliterationLists.Length != _supportedLanguagesProperty.arraySize)
+            {
+                Debug.Log("Update transliteration lists");
+                _transliterationLists = new (SystemLanguage, TransliterationList)[LocalizationSettings.Singleton.SupportedLanguages.Length];
+                for (var i = 0; i < _transliterationLists.Length; i++)
+                {
+                    var property = _transliterationProperty.GetArrayElementAtIndex(i);
+                    _transliterationLists[i] = ((SystemLanguage)property.FindPropertyRelative("language").intValue,
+                        new TransliterationList(_settings, property.FindPropertyRelative("items")));
+                }
+            }
         }
     }
 }

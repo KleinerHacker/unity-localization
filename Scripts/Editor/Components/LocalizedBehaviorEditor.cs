@@ -17,7 +17,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
             _keyProperty = serializedObject.FindProperty("key");
         }
         
-        public override void OnInspectorGUI()
+        public sealed override void OnInspectorGUI()
         {
             serializedObject.Update();
 
@@ -27,8 +27,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
             }
             LocalizedEditorUtils.OnGUIRowFilter(_keyProperty.displayName, _keyProperty, OnFilterRow);
             
+            OnGUI();
+            
             serializedObject.ApplyModifiedProperties();
         }
+
+        protected virtual void OnGUI() {}
 
         protected abstract bool OnFilterRow(LocalizedRow row);
     }
