@@ -10,14 +10,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
     {
         protected override bool OnFilterRow(LocalizedRow row) => row is LocalizedTextRow;
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        protected override void DoOnGUI(Rect position, SerializedProperty property)
         {
-            base.OnGUI(position, property, label);
-            
             var overrideTextEditingProperty = property.FindPropertyRelative("overrideTextEditing");
             var overriddenTextEditingProperty = property.FindPropertyRelative("overriddenTextEditing");
 
-            var pos = new Rect(position.x, position.y + lineHeight + 5f, position.width, lineHeight);
+            var pos = new Rect(position.x, position.y + lineHeight, position.width, lineHeight);
             EditorGUI.PropertyField(pos, overrideTextEditingProperty, new GUIContent("Override Text Editing"));
             if (overrideTextEditingProperty.boolValue)
             {
@@ -26,7 +24,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
             }
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        protected override float DoGetPropertyHeight(SerializedProperty property)
         {
             var overrideTextEditingProperty = property.FindPropertyRelative("overrideTextEditing");
             if (overrideTextEditingProperty.boolValue)

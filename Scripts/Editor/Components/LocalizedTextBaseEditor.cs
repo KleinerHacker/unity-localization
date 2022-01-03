@@ -1,7 +1,6 @@
 using UnityEditor;
 using UnityEngine;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
-using UnityLocalization.Runtime.localization.Scripts.Runtime.Components;
 
 namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
 {
@@ -21,7 +20,6 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
 
         protected override void OnGUI()
         {
-            EditorGUILayout.Space();
             EditorGUILayout.PropertyField(_overrideTextEditingProperty, new GUIContent("Overwrite Text Editing Mode"));
             if (_overrideTextEditingProperty.boolValue)
             {
