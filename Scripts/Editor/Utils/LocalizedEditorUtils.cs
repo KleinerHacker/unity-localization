@@ -16,7 +16,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Utils
             var index = filteredRows.IndexOf(x => x.Key == keyProperty.stringValue);
             index = rect.HasValue ? 
                 EditorGUI.Popup(rect.Value, new GUIContent(name), index, filteredRows.Select(x => new GUIContent(x.Key)).ToArray()) : 
-                EditorGUILayout.Popup(new GUIContent(name), index, filteredRows.Select(x => x.Key).ToArray());
+                EditorGUILayout.Popup(new GUIContent(name), index, filteredRows.Select(x => new GUIContent(x.Key)).ToArray());
 
             if (index >= 0)
             {
