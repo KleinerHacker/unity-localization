@@ -1,3 +1,4 @@
+#if DEMO
 using UnityEngine;
 using UnityLocalization.Runtime.localization.Scripts.Runtime;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Types;
@@ -25,3 +26,4 @@ namespace UnityLocalization.Demo.localization.Scripts.Demo
         }
     }
 }
+#endif
