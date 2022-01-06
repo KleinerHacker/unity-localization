@@ -1,3 +1,4 @@
+#if DEMO
 using UnityEngine;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Types;
 
@@ -13,3 +14,4 @@ namespace UnityLocalization.Demo.localization.Scripts.Demo
         private int value;
     }
 }
+#endif
