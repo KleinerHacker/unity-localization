@@ -27,6 +27,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
                     Debug.Log("Unable to find localization settings, create new");
 
                     settings = new LocalizationSettings();
+                    AssetDatabase.CreateFolder("Assets", "Resources");
                     AssetDatabase.CreateAsset(settings, Path);
                     AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
@@ -100,6 +101,26 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 #endif
         }
 
+#if UNITY_EDITOR
+        public LocalizedTextRow[] TextRows
+        {
+            get => textRows;
+            set => textRows = value;
+        }
+
+        public LocalizedSpriteRow[] SpriteRows
+        {
+            get => spriteRows;
+            set => spriteRows = value;
+        }
+
+        public LocalizedMaterialRow[] MaterialRows
+        {
+            get => materialRows;
+            set => materialRows = value;
+        }
+#endif
+
         public LocalizationTransliteration[] Transliterations => transliterations;
 
         public LocalizationTextEditing TextEditing => textEditing;
@@ -137,12 +158,12 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
                     .ToArray();
 
                 transliterations = transliterations.Where(x => !removedList
-                    .Contains(x.Language))
+                        .Contains(x.Language))
                     .ToArray();
                 transliterations = transliterations
                     .Concat(addedList.Select(x => new LocalizationTransliteration { Language = x }).ToArray())
                     .ToArray();
-            } 
+            }
         }
 #endif
     }

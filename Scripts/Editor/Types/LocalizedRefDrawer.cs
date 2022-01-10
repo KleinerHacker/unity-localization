@@ -9,19 +9,18 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
     public abstract class LocalizedRefDrawer : ExtendedDrawer
     {
         private bool _foldout = false;
-        
+
         public sealed override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            _foldout = EditorGUI.BeginFoldoutHeaderGroup(position, _foldout, GUIContent.none);
-            
             var keyProperty = property.FindPropertyRelative("key");
-            LocalizedEditorUtils.OnGUIRowFilter(property.displayName, keyProperty, OnFilterRow, new Rect(position.x, position.y, position.width, lineHeight));
-
+            
+            _foldout = EditorGUI.BeginFoldoutHeaderGroup(position, _foldout, new GUIContent(property.displayName + " (Key: " + keyProperty.stringValue + ")"));
             if (_foldout)
             {
+                LocalizedEditorUtils.OnGUIRowFilter(keyProperty.displayName, keyProperty, OnFilterRow, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
+                position = CalculateNext(position);
                 DoOnGUI(position, property);
             }
-            
             EditorGUI.EndFoldoutHeaderGroup();
         }
 
@@ -30,7 +29,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
             if (!_foldout)
                 return lineHeight;
 
-            return DoGetPropertyHeight(property);
+            return DoGetPropertyHeight(property) + lineHeight;
         }
 
         protected abstract bool OnFilterRow(LocalizedRow row);

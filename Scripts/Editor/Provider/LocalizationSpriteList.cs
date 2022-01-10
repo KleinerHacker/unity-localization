@@ -30,5 +30,10 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             tmp.RemoveAt(list.index);
             UnityLocalize.Settings.Rows = tmp.ToArray();
         }
+
+        protected override void Sort()
+        {
+            LocalizationSettings.Singleton.SpriteRows = LocalizationSettings.Singleton.SpriteRows.OrderBy(x => x.Key).ToArray();
+        }
     }
 }
