@@ -18,18 +18,23 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         protected LocalizationList(SerializedObject serializedObject, SerializedProperty elements) : base(serializedObject, elements)
         {
+            _supportedLanguagesProperty = serializedObject.FindProperty("supportedLanguages");
+
             drawHeaderCallback += OnDrawHeaderCallback;
             drawElementCallback += OnDrawElementCallback;
             onAddCallback += OnAddCallback;
             onRemoveCallback += OnRemoveCallback;
             elementHeight = Height;
             multiSelect = false;
-
-            _supportedLanguagesProperty = serializedObject.FindProperty("supportedLanguages");
         }
 
         private void OnDrawHeaderCallback(Rect rect)
         {
+            if (GUI.Button(new Rect(rect.x - 2f, rect.y + 1f, 20f, 20f), EditorGUIUtility.IconContent("AlphabeticalSorting"), EditorStyles.iconButton))
+            {
+                Sort();
+            }
+
             var parts = (rect.width - LeftMargin) / (_supportedLanguagesProperty.arraySize + 1);
 
             var pos = new Rect(rect.x + LeftMargin, rect.y, parts, rect.height);
@@ -67,5 +72,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         protected abstract void OnAddCallback(ReorderableList list);
 
         protected abstract void OnRemoveCallback(ReorderableList list);
+
+        protected abstract void Sort();
     }
 }
