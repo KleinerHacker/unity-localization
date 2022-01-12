@@ -10,6 +10,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
     
     public abstract class LocalizedSpriteBase<T> : LocalizedBehavior<Sprite, T> where T : Component
     {
-        protected override Sprite GetValue(string key) => LocalizationUtils.GetSpriteValue(key);
+        protected override Sprite GetValue(string key, string package) => LocalizationUtils.GetSpriteValue(key, package);
     }
 }

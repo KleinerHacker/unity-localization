@@ -10,9 +10,13 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Utils
 {
     internal static class LocalizedEditorUtils
     {
-        public static void OnGUIRowFilter(string name, SerializedProperty keyProperty, Func<LocalizedRow, bool> filter, Rect? rect = null)
+        public static void OnGUIRowFilter(string name, SerializedProperty keyProperty, SerializedProperty packageProperty, Func<LocalizedRow, bool> filter, Rect? rect = null)
         {
-            var filteredRows = UnityLocalize.Settings.Rows.Where(filter).ToArray();
+            var package = string.IsNullOrEmpty(packageProperty.stringValue) ?
+                UnityLocalize.Settings.DefaultPackage :
+                UnityLocalize.Settings.Packages.FirstOrDefault(x => x.Name == packageProperty.stringValue);
+            
+            var filteredRows = package?.Rows.Where(filter).ToArray() ?? Array.Empty<LocalizedRow>();
             var index = filteredRows.IndexOf(x => x.Key == keyProperty.stringValue);
             index = rect.HasValue ? 
                 EditorGUI.Popup(rect.Value, new GUIContent(name), index, filteredRows.Select(x => new GUIContent(x.Key)).ToArray()) : 

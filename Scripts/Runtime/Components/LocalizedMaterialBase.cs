@@ -9,6 +9,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 {
     public abstract class LocalizedMaterialBase<T> : LocalizedBehavior<Material, T> where T : Component
     {
-        protected override Material GetValue(string key) => LocalizationUtils.GetMaterialValue(key);
+        protected override Material GetValue(string key, string package) => LocalizationUtils.GetMaterialValue(key, package);
     }
 }

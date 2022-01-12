@@ -10,6 +10,9 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
         [SerializeField]
         protected string key;
 
+        [SerializeField]
+        protected string package;
+
         #endregion
 
         internal abstract void UpdateLanguage();
@@ -34,14 +37,14 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 
         private void UpdateValue(TE element)
         {
-            var value = GetValue(key);
+            var value = GetValue(key, package);
             if (value != null)
             {
                 UpdateElement(value, element);
             }
         }
 
-        protected abstract T GetValue(string key);
+        protected abstract T GetValue(string key, string package);
         protected abstract void UpdateElement(T value, TE element);
 
         internal sealed override void UpdateLanguage()

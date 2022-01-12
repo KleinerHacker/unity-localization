@@ -13,13 +13,14 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         public sealed override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var keyProperty = property.FindPropertyRelative("key");
+            var packageProperty = property.FindPropertyRelative("package");
 
             position = EditorGUI.IndentedRect(position);
             _foldout = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x, position.y, position.width, lineHeight), _foldout, 
                 new GUIContent(property.displayName + " (Key: " + keyProperty.stringValue + ")"));
             if (_foldout)
             {
-                LocalizedEditorUtils.OnGUIRowFilter(keyProperty.displayName, keyProperty, OnFilterRow, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
+                LocalizedEditorUtils.OnGUIRowFilter(keyProperty.displayName, keyProperty, packageProperty, OnFilterRow, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
                 position = CalculateNext(position);
                 DoOnGUI(position, property);
             }

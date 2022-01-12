@@ -9,11 +9,13 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
     public abstract class LocalizedBehaviorEditor : ExtendedEditor
     {
         private SerializedProperty _keyProperty;
+        private SerializedProperty _packageProperty;
         private bool _foldout = false;
 
         protected virtual void OnEnable()
         {
             _keyProperty = serializedObject.FindProperty("key");
+            _packageProperty = serializedObject.FindProperty("package");
         }
 
         public sealed override void OnInspectorGUI()
@@ -28,7 +30,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
                     EditorGUILayout.HelpBox("No key ist set. Value will not changed at runtime!", MessageType.Warning);
                 }
 
-                LocalizedEditorUtils.OnGUIRowFilter(_keyProperty.displayName, _keyProperty, OnFilterRow);
+                LocalizedEditorUtils.OnGUIRowFilter(_keyProperty.displayName, _keyProperty, _packageProperty, OnFilterRow);
 
                 OnGUI();
             }
