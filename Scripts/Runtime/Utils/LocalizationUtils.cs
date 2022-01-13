@@ -8,13 +8,13 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
 {
     internal static class LocalizationUtils
     {
-        public static string GetTextValue(string key, LocalizationTextEditing? overrideTextEditing)
+        public static string GetTextValue(string key, string package, LocalizationTextEditing? overrideTextEditing)
         {
-            var textElement = GetValue<string, LocalizedTextRow>(key);
+            var textElement = GetValue<string, LocalizedTextRow>(key, package);
             if (textElement == null)
                 return null;
             
-            var text = textElement?.Value;
+            var text = textElement.Value;
             
             //Transliteration
             var transliteration = LocalizationSettings.Singleton.Transliterations.FirstOrDefault(x => x.Language == textElement.Language);
@@ -36,13 +36,18 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
             return text;
         }
 
-        public static Sprite GetSpriteValue(string key) => GetValue<Sprite, LocalizedSpriteRow>(key)?.Value;
+        public static Sprite GetSpriteValue(string key, string package) => GetValue<Sprite, LocalizedSpriteRow>(key, package)?.Value;
 
-        public static Material GetMaterialValue(string key) => GetValue<Material, LocalizedMaterialRow>(key)?.Value;
+        public static Material GetMaterialValue(string key, string package) => GetValue<Material, LocalizedMaterialRow>(key, package)?.Value;
 
-        private static LocalizedElement<T> GetValue<T, TR>(string key) where TR : LocalizedRow<T> where T : class
+        private static LocalizedElement<T> GetValue<T, TR>(string key, string package) where TR : LocalizedRow<T> where T : class
         {
-            var row = UnityLocalize.Settings.Rows.FirstOrDefault(x => x.Key == key);
+            var rows = string.IsNullOrEmpty(package) ? UnityLocalize.Settings.DefaultPackage.Rows : 
+                UnityLocalize.Settings.Packages.FirstOrDefault(x => string.Equals(x.Name, package, StringComparison.Ordinal))?.Rows;
+            if (rows == null)
+                throw new InvalidOperationException("Package with name '" + package + "' not found in localization settings");
+            
+            var row = rows.FirstOrDefault(x => string.Equals(x.Key, key, StringComparison.Ordinal));
             if (row == null)
                 return default;
             if (!(row is TR typedRow))

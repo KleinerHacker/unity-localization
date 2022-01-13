@@ -55,13 +55,22 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private SystemLanguage fallbackLanguage = SystemLanguage.English;
 
         [SerializeField]
+        [Obsolete]
         private LocalizedTextRow[] textRows = Array.Empty<LocalizedTextRow>();
 
         [SerializeField]
+        [Obsolete]
         private LocalizedSpriteRow[] spriteRows = Array.Empty<LocalizedSpriteRow>();
 
         [SerializeField]
+        [Obsolete]
         private LocalizedMaterialRow[] materialRows = Array.Empty<LocalizedMaterialRow>();
+
+        [SerializeField]
+        private LocalizationPackage defaultPackage = new LocalizationPackage();
+
+        [SerializeField]
+        private LocalizationPackage[] packages = Array.Empty<LocalizationPackage>();
 
         [SerializeField]
         private LocalizationTransliteration[] transliterations = Array.Empty<LocalizationTransliteration>();
@@ -83,86 +92,51 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 #endif
         }
 
-        public LocalizedRow[] Rows
-        {
-            get => textRows.Concat(
-                    spriteRows.Concat(
-                        materialRows.Cast<LocalizedRow>()
-                    )
-                )
-                .ToArray();
-#if UNITY_EDITOR
-            set
-            {
-                textRows = value.Where(x => x is LocalizedTextRow).Cast<LocalizedTextRow>().ToArray();
-                spriteRows = value.Where(x => x is LocalizedSpriteRow).Cast<LocalizedSpriteRow>().ToArray();
-                materialRows = value.Where(x => x is LocalizedMaterialRow).Cast<LocalizedMaterialRow>().ToArray();
-            }
-#endif
-        }
-
-#if UNITY_EDITOR
-        public LocalizedTextRow[] TextRows
-        {
-            get => textRows;
-            set => textRows = value;
-        }
-
-        public LocalizedSpriteRow[] SpriteRows
-        {
-            get => spriteRows;
-            set => spriteRows = value;
-        }
-
-        public LocalizedMaterialRow[] MaterialRows
-        {
-            get => materialRows;
-            set => materialRows = value;
-        }
-#endif
-
         public LocalizationTransliteration[] Transliterations => transliterations;
 
         public LocalizationTextEditing TextEditing => textEditing;
+
+        public LocalizationPackage DefaultPackage => defaultPackage;
+
+        public LocalizationPackage[] Packages
+        {
+            get => packages;
+#if UNITY_EDITOR
+            set => packages = value;
+#endif
+        }
 
         #endregion
 
 #if UNITY_EDITOR
         public void UpdateContent()
         {
-            foreach (var row in Rows)
+            defaultPackage.UpdateContent(supportedLanguages, transliterations);
+            foreach (var package in packages)
             {
-                if (row.RawColumns.Length == SupportedLanguages.Length)
-                    continue;
+                package.UpdateContent(supportedLanguages, transliterations);
+            }
+        }
 
-                var addedList = SupportedLanguages
-                    .Where(x => !row.RawColumns.Select(y => y.Language).Contains(x))
-                    .ToArray();
-                var removedList = row.RawColumns
-                    .Select(x => x.Language)
-                    .Where(x => !SupportedLanguages.Contains(x))
-                    .ToArray();
-
-                row.RemoveColumns(removedList);
-                row.AddColumns(addedList);
+        private void OnValidate()
+        {
+            //Migration
+            if (textRows is { Length: > 0 })
+            {
+                defaultPackage.TextRows = defaultPackage.TextRows.Concat(textRows).ToArray();
+                textRows = null;
             }
 
-            if (transliterations.Length != SupportedLanguages.Length)
+            if (spriteRows is { Length: > 0 })
             {
-                var addedList = SupportedLanguages
-                    .Where(x => transliterations.All(y => y.Language != x))
-                    .ToArray();
-                var removedList = transliterations
-                    .Select(x => x.Language)
-                    .Where(x => !SupportedLanguages.Contains(x))
-                    .ToArray();
+                defaultPackage.SpriteRows = defaultPackage.SpriteRows.Concat(spriteRows).ToArray();
+                spriteRows = null;
+            }
 
-                transliterations = transliterations.Where(x => !removedList
-                        .Contains(x.Language))
-                    .ToArray();
-                transliterations = transliterations
-                    .Concat(addedList.Select(x => new LocalizationTransliteration { Language = x }).ToArray())
-                    .ToArray();
+            if (materialRows is { Length: > 0 })
+            {
+                defaultPackage.MaterialRows = defaultPackage.MaterialRows.Concat(materialRows).ToArray();
+                materialRows = null;
             }
         }
 #endif

@@ -42,7 +42,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         #region Inspector Data
 
         [SerializeField]
-        private LocalizedElement<T>[] columns;
+        private LocalizedElement<T>[] columns = Array.Empty<LocalizedElement<T>>();
 
         #endregion
 

@@ -17,7 +17,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 
         #endregion
         
-        protected override string GetValue(string key) => 
-            LocalizationUtils.GetTextValue(key, overrideTextEditing ? overriddenTextEditing : (LocalizationTextEditing?)null);
+        protected override string GetValue(string key, string package) => 
+            LocalizationUtils.GetTextValue(key, package, overrideTextEditing ? overriddenTextEditing : (LocalizationTextEditing?)null);
     }
 }

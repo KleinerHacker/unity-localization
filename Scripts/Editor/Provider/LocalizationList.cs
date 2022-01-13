@@ -1,9 +1,8 @@
-using System.Linq;
-using System.Reflection;
+using System;
 using UnityEditor;
+using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils.Extensions;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
 
 namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 {
@@ -69,10 +68,24 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             }
         }
 
-        protected abstract void OnAddCallback(ReorderableList list);
+        private void OnAddCallback(ReorderableList list)
+        {
+            serializedProperty.InsertArrayElementAtIndex(serializedProperty.arraySize);
+            var property = serializedProperty.GetArrayElementAtIndex(serializedProperty.arraySize - 1);
+            property.FindPropertyRelative("key").stringValue = KeyPath + "/" + Guid.NewGuid();
+        }
 
-        protected abstract void OnRemoveCallback(ReorderableList list);
+        private void OnRemoveCallback(ReorderableList list)
+        {
+            serializedProperty.DeleteArrayElementAtIndex(list.index);
+        }
 
-        protected abstract void Sort();
+        protected abstract string KeyPath { get; }
+
+        private void Sort()
+        {
+            serializedProperty.SortArray((p1, p2) => 
+                string.Compare(p1.FindPropertyRelative("key").stringValue, p2.FindPropertyRelative("key").stringValue, StringComparison.Ordinal));
+        }
     }
 }
