@@ -16,13 +16,15 @@ Scope: org.pcsoft
 
 # usage
 
-### Keys
+### Keys & Packages
 To setup your keys change to project settings and search for `Localization` tab. Here you find setup for fallback language, supported languages and three tables:
 * Text values - For texts only
 * Sprite values - For sprites like sprite renderer oder UI images
 * Material values - For materials used in renderers
 
-Use a '/' to create a sub menu in case of choising a key. See below.
+Additional you can add custom packages with all keys above for more flexibility and overview.
+
+Use a '/' to create a sub menu in case of choising a key / package. See below.
 
 ![demo](https://github.com/KleinerHacker/unity-localization/blob/7b15cdf4fbfd4a92ce57d0804c26077da62cf606/Doc/demo.png)
 
