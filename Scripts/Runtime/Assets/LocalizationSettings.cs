@@ -66,7 +66,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         [Obsolete]
         private LocalizedMaterialRow[] materialRows = Array.Empty<LocalizedMaterialRow>();
 
-        [SerializeField] 
+        [SerializeField]
         private LocalizationPackage defaultPackage = new LocalizationPackage();
 
         [SerializeField]
@@ -98,7 +98,13 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
         public LocalizationPackage DefaultPackage => defaultPackage;
 
-        public LocalizationPackage[] Packages => packages;
+        public LocalizationPackage[] Packages
+        {
+            get => packages;
+#if UNITY_EDITOR
+            set => packages = value;
+#endif
+        }
 
         #endregion
 
@@ -120,13 +126,13 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
                 defaultPackage.TextRows = defaultPackage.TextRows.Concat(textRows).ToArray();
                 textRows = null;
             }
-            
+
             if (spriteRows is { Length: > 0 })
             {
                 defaultPackage.SpriteRows = defaultPackage.SpriteRows.Concat(spriteRows).ToArray();
                 spriteRows = null;
             }
-            
+
             if (materialRows is { Length: > 0 })
             {
                 defaultPackage.MaterialRows = defaultPackage.MaterialRows.Concat(materialRows).ToArray();

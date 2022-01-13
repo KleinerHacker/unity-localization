@@ -13,15 +13,12 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private string name;
 
         [SerializeField]
-        [SerializeReference]
         private LocalizedTextRow[] textRows = Array.Empty<LocalizedTextRow>();
 
         [SerializeField]
-        [SerializeReference]
         private LocalizedSpriteRow[] spriteRows = Array.Empty<LocalizedSpriteRow>();
 
         [SerializeField]
-        [SerializeReference]
         private LocalizedMaterialRow[] materialRows = Array.Empty<LocalizedMaterialRow>();
 
         #endregion

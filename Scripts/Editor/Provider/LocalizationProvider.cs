@@ -52,8 +52,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             _fallbackLanguageProperty = _settings.FindProperty("fallbackLanguage");
             _transliterationProperty = _settings.FindProperty("transliterations");
             _textEditingProperty = _settings.FindProperty("textEditing");
-            var defaultPackageProperty = _settings.FindProperty("defaultPackage");
-            _packagesProperties = new[] { defaultPackageProperty }.Concat(_settings.FindProperties("packages")).ToArray();
+            UpdatePackages();
 
             UpdatePackageLists();
             UpdateTransliterationLists();
@@ -106,20 +105,45 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         private void LayoutPackageSettings(bool lanDoublet)
         {
+            EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Packages", EditorStyles.boldLabel);
+            EditorGUILayout.Space(1f, true);
+            if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Plus"), EditorStyles.iconButton))
+            {
+                AddPackage();
+            }
 
+            if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Minus"), EditorStyles.iconButton))
+            {
+                RemovePackage();
+            }
+            EditorGUILayout.EndHorizontal();
+
+            var anyOpened = false;
             for (var i = 0; i < _packagesProperties.Length; i++)
             {
                 var packageProperty = _packagesProperties[i];
-                
-                var package = string.IsNullOrEmpty(packageProperty.FindPropertyRelative("name").stringValue) ?
+
+                var packageName = packageProperty.FindPropertyRelative("name").stringValue;
+                var package = string.IsNullOrEmpty(packageName) ?
                     LocalizationSettings.Singleton.DefaultPackage :
-                    LocalizationSettings.Singleton.Packages.FirstOrDefault(x => x.Name == packageProperty.FindPropertyRelative("name").stringValue);
+                    LocalizationSettings.Singleton.Packages.FirstOrDefault(x => x.Name == packageName);
+                
                 var keyDoublet = package?.Rows.GroupBy(x => x.Key).Any(x => x.Count() > 1) ?? false;
 
-                _packageFold = EditorGUILayout.BeginFoldoutHeaderGroup(_packageFold == i, "<Default>") ? i : -1;
+                var opened = EditorGUILayout.BeginFoldoutHeaderGroup(_packageFold == i, string.IsNullOrEmpty(packageName) ? "<default>" : packageName);
+                if (opened)
+                {
+                    anyOpened = true;
+                    _packageFold = i;
+                }
                 if (_packageFold == i)
                 {
+                    if (i != 0)
+                    {
+                        EditorGUILayout.PropertyField(packageProperty.FindPropertyRelative("name"), new GUIContent("Package Name:"));
+                    }
+                    
                     if (keyDoublet)
                     {
                         EditorGUILayout.HelpBox("There are key doublets. Please fix this to avoid wrong text choices.", MessageType.Warning);
@@ -143,8 +167,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
                         EditorGUILayout.HelpBox("Please fix doublet problem above!", MessageType.Error);
                     }
                 }
-
                 EditorGUILayout.EndFoldoutHeaderGroup();
+            }
+            
+            if (!anyOpened)
+            {
+                _packageFold = -1;
             }
         }
 
@@ -180,6 +208,11 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         private void UpdatePackageLists()
         {
+            _settings.ApplyModifiedProperties();
+            _settings.Update();
+            
+            UpdatePackages();
+            
             _textRowList = new LocalizationList[_packagesProperties.Length];
             _spriteRowList = new LocalizationList[_packagesProperties.Length];
             _materialRowList = new LocalizationList[_packagesProperties.Length];
@@ -190,6 +223,43 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
                 _spriteRowList[i] = new LocalizationMaterialList(_settings, _packagesProperties[i].FindPropertyRelative("spriteRows"));
                 _materialRowList[i] = new LocalizationMaterialList(_settings, _packagesProperties[i].FindPropertyRelative("materialRows"));
             }
+        }
+
+        private void UpdatePackages()
+        {
+            var defaultPackageProperty = _settings.FindProperty("defaultPackage");
+            _packagesProperties = new[] { defaultPackageProperty }.Concat(_settings.FindProperties("packages")).ToArray();
+        }
+
+        private void AddPackage()
+        {
+            var property = _settings.FindProperty("packages");
+            property.InsertArrayElementAtIndex(property.arraySize);
+            var subProperty = property.GetArrayElementAtIndex(property.arraySize - 1);
+            subProperty.FindPropertyRelative("name").stringValue = Guid.NewGuid().ToString();
+            subProperty.FindPropertyRelative("textRows").ClearArray();
+            subProperty.FindPropertyRelative("spriteRows").ClearArray();
+            subProperty.FindPropertyRelative("materialRows").ClearArray();
+            
+            UpdatePackageLists();
+        }
+
+        private void RemovePackage()
+        {
+            var genericMenu = new GenericMenu();
+            foreach (var packageProperty in _settings.FindProperties("packages"))
+            {
+                var packageName = packageProperty.FindPropertyRelative("name").stringValue;
+                genericMenu.AddItem(new GUIContent(packageName), false, () =>
+                {
+                    if (EditorUtility.DisplayDialog("Remove Package", "You are sure to delete complete package '" + packageName + "'? All keys will be lost!", "Yes", "No"))
+                    {
+                        LocalizationSettings.Singleton.Packages = LocalizationSettings.Singleton.Packages.Where(x => x.Name != packageName).ToArray();
+                        UpdatePackageLists();
+                    }
+                });
+            }
+            genericMenu.ShowAsContext();
         }
     }
 }

@@ -14,13 +14,16 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         {
             var keyProperty = property.FindPropertyRelative("key");
             var packageProperty = property.FindPropertyRelative("package");
+            var packageName = string.IsNullOrEmpty(packageProperty.stringValue) ? "<default>" : packageProperty.stringValue;
 
             position = EditorGUI.IndentedRect(position);
             _foldout = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x, position.y, position.width, lineHeight), _foldout, 
-                new GUIContent(property.displayName + " (Key: " + keyProperty.stringValue + ")"));
+                new GUIContent(property.displayName + " (" + packageName + " -> " + keyProperty.stringValue + ")"));
             if (_foldout)
             {
-                LocalizedEditorUtils.OnGUIRowFilter(keyProperty.displayName, keyProperty, packageProperty, OnFilterRow, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
+                LocalizedEditorUtils.LayoutPackageFilter(packageProperty, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
+                position = CalculateNext(position);
+                LocalizedEditorUtils.LayoutRowFilter(keyProperty.displayName, keyProperty, packageProperty, OnFilterRow, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
                 position = CalculateNext(position);
                 DoOnGUI(position, property);
             }
@@ -32,7 +35,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
             if (!_foldout)
                 return lineHeight;
 
-            return DoGetPropertyHeight(property) + lineHeight;
+            return DoGetPropertyHeight(property) + lineHeight * 2f;
         }
 
         protected abstract bool OnFilterRow(LocalizedRow row);

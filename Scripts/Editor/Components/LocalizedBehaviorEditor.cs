@@ -22,15 +22,19 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
         {
             serializedObject.Update();
 
-            _foldout = EditorGUILayout.BeginFoldoutHeaderGroup(_foldout, new GUIContent("Key (" + _keyProperty.stringValue + ")"));
+            var packageName = string.IsNullOrEmpty(_packageProperty.stringValue) ? "<default>" : _packageProperty.stringValue;
+            var keyName = _keyProperty.stringValue;
+            _foldout = EditorGUILayout.BeginFoldoutHeaderGroup(_foldout, new GUIContent("Key (" + packageName + " -> " + keyName + ")"));
             if (_foldout)
             {
-                if (string.IsNullOrWhiteSpace(_keyProperty.stringValue))
+                LocalizedEditorUtils.LayoutPackageFilter(_packageProperty);
+                
+                if (string.IsNullOrWhiteSpace(keyName))
                 {
                     EditorGUILayout.HelpBox("No key ist set. Value will not changed at runtime!", MessageType.Warning);
                 }
 
-                LocalizedEditorUtils.OnGUIRowFilter(_keyProperty.displayName, _keyProperty, _packageProperty, OnFilterRow);
+                LocalizedEditorUtils.LayoutRowFilter(_keyProperty.displayName, _keyProperty, _packageProperty, OnFilterRow);
 
                 OnGUI();
             }

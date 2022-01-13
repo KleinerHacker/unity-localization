@@ -250,7 +250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c826e8b4d84f19a9131511aa842826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: dialog/a
+  key: dialog/title
+  package: 
   overrideTextEditing: 0
   overriddenTextEditing: 0
 --- !u!114 &714061350
@@ -286,7 +287,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: dialoeg titel
+  m_Text: dialog title
 --- !u!222 &714061351
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -367,7 +368,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: waechseln
+  m_Text: change
 --- !u!222 &776239827
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -388,7 +389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c826e8b4d84f19a9131511aa842826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: button/switch
+  key: button/text
+  package: 
   overrideTextEditing: 0
   overriddenTextEditing: 0
 --- !u!1 &1030662599
@@ -542,12 +544,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textRef:
     key: dialog/a
+    package: 
     overrideTextEditing: 0
     overriddenTextEditing: 0
   spriteRef:
     key: sprite/key
+    package: 
   materialRef:
     key: material/key
+    package: 
 --- !u!114 &1030662605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -970,7 +975,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c826e8b4d84f19a9131511aa842826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: dialog/b
+  key: dialog/message
+  package: 
   overrideTextEditing: 0
   overriddenTextEditing: 0
 --- !u!114 &2144119372
@@ -1006,7 +1012,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: dialog text
+  m_Text: dialog message
 --- !u!222 &2144119373
 CanvasRenderer:
   m_ObjectHideFlags: 0

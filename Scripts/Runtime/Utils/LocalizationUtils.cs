@@ -43,7 +43,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
         private static LocalizedElement<T> GetValue<T, TR>(string key, string package) where TR : LocalizedRow<T> where T : class
         {
             var rows = string.IsNullOrEmpty(package) ? UnityLocalize.Settings.DefaultPackage.Rows : 
-                UnityLocalize.Settings.Packages.FirstOrDefault(x => string.Equals(x.Name, key, StringComparison.Ordinal))?.Rows;
+                UnityLocalize.Settings.Packages.FirstOrDefault(x => string.Equals(x.Name, package, StringComparison.Ordinal))?.Rows;
             if (rows == null)
                 throw new InvalidOperationException("Package with name '" + package + "' not found in localization settings");
             
