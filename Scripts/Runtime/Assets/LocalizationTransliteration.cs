@@ -12,7 +12,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private SystemLanguage language;
 
         [SerializeField]
-        private LocalizationTransliterationItem[] items;
+        private LocalizationTransliterationItem[] items = Array.Empty<LocalizationTransliterationItem>();
 
         #endregion
 

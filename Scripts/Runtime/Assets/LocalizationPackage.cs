@@ -74,7 +74,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         #endregion
 
 #if UNITY_EDITOR
-        public void UpdateContent(SystemLanguage[] supportedLanguages, LocalizationTransliteration[] transliterations)
+        public void UpdateContent(SystemLanguage[] supportedLanguages)
         {
             foreach (var row in Rows)
             {
@@ -91,24 +91,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
                 row.RemoveColumns(removedList);
                 row.AddColumns(addedList);
-            }
-
-            if (transliterations.Length != supportedLanguages.Length)
-            {
-                var addedList = supportedLanguages
-                    .Where(x => transliterations.All(y => y.Language != x))
-                    .ToArray();
-                var removedList = transliterations
-                    .Select(x => x.Language)
-                    .Where(x => !supportedLanguages.Contains(x))
-                    .ToArray();
-
-                transliterations = transliterations.Where(x => !removedList
-                        .Contains(x.Language))
-                    .ToArray();
-                transliterations = transliterations
-                    .Concat(addedList.Select(x => new LocalizationTransliteration { Language = x }).ToArray())
-                    .ToArray();
             }
         }
 #endif

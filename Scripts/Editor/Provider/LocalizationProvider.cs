@@ -15,7 +15,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         #region Static Area
 
         [SettingsProvider]
-        public static SettingsProvider CreateLocalizationSettingsProvider()
+        public static SettingsProvider CreateSettingsProvider()
         {
             return new LocalizationProvider();
         }
@@ -55,13 +55,13 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             UpdatePackages();
 
             UpdatePackageLists();
-            UpdateTransliterationLists();
+            UpdateTransliterationLists(UnityLocalize.Settings.SupportedLanguages.GroupBy(x => x).Any(x => x.Count() > 1));
         }
 
         public override void OnInspectorUpdate()
         {
             base.OnInspectorUpdate();
-            UpdateTransliterationLists();
+            UpdateTransliterationLists(UnityLocalize.Settings.SupportedLanguages.GroupBy(x => x).Any(x => x.Count() > 1));
         }
 
         public override void OnGUI(string searchContext)
@@ -77,7 +77,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
             EditorGUILayout.Space();
 
-            LayoutTransliterationSettings();
+            LayoutTransliterationSettings(lanDoublet);
 
             UnityLocalize.Settings.UpdateContent();
             _settings.ApplyModifiedProperties();
@@ -176,26 +176,42 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             }
         }
 
-        private void LayoutTransliterationSettings()
+        private void LayoutTransliterationSettings(bool lanDoublet)
         {
             _transliterationFold = EditorGUILayout.BeginFoldoutHeaderGroup(_transliterationFold, "Transliterations");
             if (_transliterationFold)
             {
-                foreach (var transliterationList in _transliterationLists)
+                if (!lanDoublet)
                 {
-                    EditorGUILayout.LabelField("Transliteration for " + transliterationList.Item1, EditorStyles.boldLabel);
-                    transliterationList.Item2.DoLayoutList();
+                    foreach (var transliterationList in _transliterationLists)
+                    {
+                        EditorGUILayout.LabelField("Transliteration for " + transliterationList.Item1, EditorStyles.boldLabel);
+                        transliterationList.Item2.DoLayoutList();
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.HelpBox("Please fix doublet problem above!", MessageType.Error);
                 }
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        private void UpdateTransliterationLists()
+        private void UpdateTransliterationLists(bool lanDoublet)
         {
-            if (_transliterationLists.Length != _supportedLanguagesProperty.arraySize)
+            if (!lanDoublet && _transliterationLists.Length != _supportedLanguagesProperty.arraySize)
             {
                 Debug.Log("Update transliteration lists");
+                
+                _settings.ApplyModifiedPropertiesWithoutUndo();
+                _settings.Update();
+                
+                LocalizationSettings.Singleton.UpdateContent();
+                
+                _settings.ApplyModifiedPropertiesWithoutUndo();
+                _settings.Update();
+                
                 _transliterationLists = new (SystemLanguage, TransliterationList)[LocalizationSettings.Singleton.SupportedLanguages.Length];
                 for (var i = 0; i < _transliterationLists.Length; i++)
                 {

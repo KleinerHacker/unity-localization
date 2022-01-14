@@ -111,10 +111,28 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 #if UNITY_EDITOR
         public void UpdateContent()
         {
-            defaultPackage.UpdateContent(supportedLanguages, transliterations);
+            defaultPackage.UpdateContent(supportedLanguages);
             foreach (var package in packages)
             {
-                package.UpdateContent(supportedLanguages, transliterations);
+                package.UpdateContent(supportedLanguages);
+            }
+            
+            if (transliterations.Length != supportedLanguages.Length)
+            {
+                var addedList = supportedLanguages
+                    .Where(x => transliterations.All(y => y.Language != x))
+                    .ToArray();
+                var removedList = transliterations
+                    .Select(x => x.Language)
+                    .Where(x => !supportedLanguages.Contains(x))
+                    .ToArray();
+
+                transliterations = transliterations.Where(x => !removedList
+                        .Contains(x.Language))
+                    .ToArray();
+                transliterations = transliterations
+                    .Concat(addedList.Select(x => new LocalizationTransliteration { Language = x }).ToArray())
+                    .ToArray();
             }
         }
 
