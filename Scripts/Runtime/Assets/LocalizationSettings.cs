@@ -109,7 +109,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         #endregion
 
 #if UNITY_EDITOR
-        public void UpdateContent()
+        public void UpdateSupportedLanguages()
         {
             defaultPackage.UpdateContent(supportedLanguages);
             foreach (var package in packages)
