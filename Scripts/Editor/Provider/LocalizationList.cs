@@ -84,8 +84,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         private void Sort()
         {
-            serializedProperty.SortArray((p1, p2) => 
-                string.Compare(p1.FindPropertyRelative("key").stringValue, p2.FindPropertyRelative("key").stringValue, StringComparison.Ordinal));
+            serializedProperty.OrderBy(p => p.FindPropertyRelative("key").stringValue);
         }
     }
 }

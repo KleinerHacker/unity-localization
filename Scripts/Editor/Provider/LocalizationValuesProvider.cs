@@ -138,8 +138,8 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
             for (var i = 0; i < _packagesProperties.Length; i++)
             {
-                _textRowList[i] = new LocalizationMaterialList(_settings, _packagesProperties[i].FindPropertyRelative("textRows"));
-                _spriteRowList[i] = new LocalizationMaterialList(_settings, _packagesProperties[i].FindPropertyRelative("spriteRows"));
+                _textRowList[i] = new LocalizationTextList(_settings, _packagesProperties[i].FindPropertyRelative("textRows"));
+                _spriteRowList[i] = new LocalizationSpriteList(_settings, _packagesProperties[i].FindPropertyRelative("spriteRows"));
                 _materialRowList[i] = new LocalizationMaterialList(_settings, _packagesProperties[i].FindPropertyRelative("materialRows"));
             }
         }
