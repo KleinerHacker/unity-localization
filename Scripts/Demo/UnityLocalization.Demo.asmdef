@@ -1,9 +1,7 @@
 {
     "name": "UnityLocalization.Demo",
     "rootNamespace": "UnityLocalization.Demo",
-    "references": [
-        "GUID:8a232e415480fe145a36742decb082fd"
-    ],
+    "references": ["GUID:8a232e415480fe145a36742decb082fd"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
