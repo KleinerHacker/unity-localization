@@ -42,15 +42,17 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
 
         private static LocalizedElement<T> GetValue<T, TR>(string key, string package) where TR : LocalizedRow<T> where T : class
         {
-            var rows = string.IsNullOrEmpty(package) ? UnityLocalize.Settings.DefaultPackage.Rows : 
-                UnityLocalize.Settings.Packages.FirstOrDefault(x => string.Equals(x.Name, package, StringComparison.Ordinal))?.Rows;
+            if (string.IsNullOrEmpty(package))
+                return default;
+
+            var rows = LocalizationSettings.Singleton.Packages.FirstOrDefault(x => string.Equals(x.Name, package, StringComparison.Ordinal))?.Rows;
             if (rows == null)
                 throw new InvalidOperationException("Package with name '" + package + "' not found in localization settings");
             
             var row = rows.FirstOrDefault(x => string.Equals(x.Key, key, StringComparison.Ordinal));
             if (row == null)
                 return default;
-            if (!(row is TR typedRow))
+            if (row is not TR typedRow)
                 throw new InvalidOperationException("Requires " + typeof(T).Name + " key!");
 
             return typedRow.Columns.Find();

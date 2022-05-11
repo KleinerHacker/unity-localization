@@ -14,7 +14,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         {
             var keyProperty = property.FindPropertyRelative("key");
             var packageProperty = property.FindPropertyRelative("package");
-            var packageName = string.IsNullOrEmpty(packageProperty.stringValue) ? "<default>" : packageProperty.stringValue;
+            var packageName = packageProperty.stringValue;
 
             position = EditorGUI.IndentedRect(position);
             _foldout = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x, position.y, position.width, lineHeight), _foldout, 

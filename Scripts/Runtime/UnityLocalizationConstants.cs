@@ -6,6 +6,11 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime
         
         public static class Menu
         {
+            public static class Asset
+            {
+                public const string PackageMenu = Root + "/Packs";
+            }
+            
             public static class Component
             {
                 public const string UIMenu = Root + "/UI";

@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
+using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils;
 #if !UNITY_EDITOR
 using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
 #endif
-using UnityEditor;
-using UnityEngine;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 {
@@ -53,7 +54,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         #region Inspector Data
 
         [SerializeField]
-        private SystemLanguage[] supportedLanguages = new[] { SystemLanguage.English };
+        private SystemLanguage[] supportedLanguages = { SystemLanguage.English };
 
         [SerializeField]
         private SystemLanguage fallbackLanguage = SystemLanguage.English;
@@ -71,16 +72,13 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private LocalizedMaterialRow[] materialRows = Array.Empty<LocalizedMaterialRow>();
 
         [SerializeField]
-        private LocalizationPackage defaultPackage = new LocalizationPackage();
-
-        [SerializeField]
-        private LocalizationPackage[] packages = Array.Empty<LocalizationPackage>();
-
-        [SerializeField]
         private LocalizationTransliteration[] transliterations = Array.Empty<LocalizationTransliteration>();
 
         [SerializeField]
         private LocalizationTextEditing textEditing = LocalizationTextEditing.None;
+
+        [SerializeField]
+        private LocalizationPackage[] packages = Array.Empty<LocalizationPackage>();
 
         #endregion
 
@@ -100,27 +98,28 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
         public LocalizationTextEditing TextEditing => textEditing;
 
-        public LocalizationPackage DefaultPackage => defaultPackage;
-
-        public LocalizationPackage[] Packages
-        {
-            get => packages;
-#if UNITY_EDITOR
-            set => packages = value;
-#endif
-        }
+        public LocalizationPackage[] Packages => packages;
 
         #endregion
 
 #if UNITY_EDITOR
+        public void AddPackage(LocalizationPackage package)
+        {
+            packages = packages.Append(package).ToArray();
+        }
+        
         public void UpdateSupportedLanguages()
         {
-            defaultPackage.UpdateContent(supportedLanguages);
+            var packages = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<LocalizationPackage>)
+                .ToArray();
+
             foreach (var package in packages)
             {
                 package.UpdateContent(supportedLanguages);
             }
-            
+
             if (transliterations.Length != supportedLanguages.Length)
             {
                 var addedList = supportedLanguages
@@ -137,28 +136,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
                 transliterations = transliterations
                     .Concat(addedList.Select(x => new LocalizationTransliteration { Language = x }).ToArray())
                     .ToArray();
-            }
-        }
-
-        private void OnValidate()
-        {
-            //Migration
-            if (textRows is { Length: > 0 })
-            {
-                defaultPackage.TextRows = defaultPackage.TextRows.Concat(textRows).ToArray();
-                textRows = null;
-            }
-
-            if (spriteRows is { Length: > 0 })
-            {
-                defaultPackage.SpriteRows = defaultPackage.SpriteRows.Concat(spriteRows).ToArray();
-                spriteRows = null;
-            }
-
-            if (materialRows is { Length: > 0 })
-            {
-                defaultPackage.MaterialRows = defaultPackage.MaterialRows.Concat(materialRows).ToArray();
-                materialRows = null;
             }
         }
 #endif

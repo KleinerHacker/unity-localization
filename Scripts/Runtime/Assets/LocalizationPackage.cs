@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 {
-    [Serializable]
-    public sealed class LocalizationPackage
+    [CreateAssetMenu(menuName = UnityLocalizationConstants.Menu.Asset.PackageMenu + "/Package")]
+    public sealed class LocalizationPackage : ScriptableObject
     {
         #region Inspector Data
 
         [SerializeField]
-        private string name;
+        private string name = Guid.NewGuid().ToString();
 
         [SerializeField]
         private LocalizedTextRow[] textRows = Array.Empty<LocalizedTextRow>();
@@ -91,6 +91,14 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
                 row.RemoveColumns(removedList);
                 row.AddColumns(addedList);
+            }
+        }
+
+        private void OnValidate()
+        {
+            if (!LocalizationSettings.Singleton.Packages.Contains(this))
+            {
+                LocalizationSettings.Singleton.AddPackage(this);
             }
         }
 #endif

@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea9f2e460df49ee9b74e90e60522093, type: 3}
+  m_Name: DemoPack
+  m_EditorClassIdentifier: 
+  name: Demo/Text
+  textRows:
+  - key: btn/demo
+    columns:
+    - language: 10
+      value: Change
+    - language: 15
+      value: "\xC4ndern"
+    - language: 21
+      value: my.key
+    - language: 35
+      value: my.key
+    - language: 13
+      value: my.key
+  - key: text/title
+    columns:
+    - language: 10
+      value: Title
+    - language: 15
+      value: Titel
+    - language: 21
+      value: my.key
+    - language: 35
+      value: my.key
+    - language: 13
+      value: my.key
+  - key: text/message
+    columns:
+    - language: 10
+      value: Message
+    - language: 15
+      value: Meldung
+    - language: 21
+      value: my.key
+    - language: 35
+      value: my.key
+    - language: 13
+      value: my.key
+  spriteRows: []
+  materialRows: []
