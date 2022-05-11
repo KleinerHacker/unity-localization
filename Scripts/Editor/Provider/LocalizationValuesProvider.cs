@@ -63,7 +63,8 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
                 packageObject.Update();
 
                 var packageName = packageObject.FindProperty("name").stringValue;
-                var package = LocalizedEditorUtils.FindAllPackages().FirstOrDefault(x => x.Name == packageName);
+                var packageObj = _packagesObjects.FirstOrDefault(x => x.FindProperty("name").stringValue == packageName);
+                var package = (LocalizationPackage)packageObj?.targetObject;
                 
                 var keyDoublet = package?.Rows.GroupBy(x => x.Key).Any(x => x.Count() > 1) ?? false;
 
