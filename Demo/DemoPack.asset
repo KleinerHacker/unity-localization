@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DemoPack
   m_EditorClassIdentifier: 
   name: Demo/Text
+  hidePackage: 1
   textRows:
   - key: btn/demo
     columns:

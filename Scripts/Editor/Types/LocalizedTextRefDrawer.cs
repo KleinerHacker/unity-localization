@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
@@ -35,6 +36,21 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
             {
                 return lineHeight * 2f + 5f;
             }
+        }
+
+        protected override string GetRefHint(string packageName, string key)
+        {
+            var settings = LocalizationSettings.Singleton;
+            
+            var package = settings.Packages.FirstOrDefault(x => string.Equals(x.Name, packageName));
+            if (package == null)
+                return "<unknown>";
+
+            var row = package.TextRows.FirstOrDefault(x => string.Equals(x.Key, key));
+            if (row == null || row.RawColumns.Length <= 0)
+                return "<unknown>";
+
+            return row.Columns.FirstOrDefault(x => x.Language == settings.FallbackLanguage)?.Value ?? row.Columns[0].Value;
         }
     }
 }

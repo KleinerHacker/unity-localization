@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Demo
   m_EditorClassIdentifier: 
   text:
-    key: material/ba33bed8-e9f1-40f0-87da-73779b46d498
-    package: Demo
+    key: btn/demo
+    package: Demo/Text
     overrideTextEditing: 1
     overriddenTextEditing: 2
   value: 0

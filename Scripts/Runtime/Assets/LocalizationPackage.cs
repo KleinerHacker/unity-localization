@@ -13,6 +13,10 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private string name = Guid.NewGuid().ToString();
 
         [SerializeField]
+        private bool hidePackage;
+
+        [Space]
+        [SerializeField]
         private LocalizedTextRow[] textRows = Array.Empty<LocalizedTextRow>();
 
         [SerializeField]
@@ -32,6 +36,8 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
             set => name = value;
 #endif
         }
+
+        public bool HidePackage => hidePackage;
 
 #if UNITY_EDITOR
         public LocalizedTextRow[] TextRows

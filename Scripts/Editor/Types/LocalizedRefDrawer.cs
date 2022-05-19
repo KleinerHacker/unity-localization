@@ -1,3 +1,4 @@
+using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
 using UnityEditorEx.Editor.editor_ex.Scripts.Editor;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
 
             position = EditorGUI.IndentedRect(position);
             _foldout = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x, position.y, position.width, lineHeight), _foldout, 
-                new GUIContent(property.displayName + " (" + packageName + " -> " + keyProperty.stringValue + ")"));
+                new GUIContent(property.displayName + " (" + GetRefHint(packageName, keyProperty.stringValue) + ")", GetRefTooltip(packageName, keyProperty.stringValue)));
             if (_foldout)
             {
                 LocalizedEditorUtils.LayoutPackageFilter(packageProperty, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
@@ -45,5 +46,8 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         }
 
         protected virtual float DoGetPropertyHeight(SerializedProperty property) => lineHeight;
+        
+        protected virtual string GetRefHint(string packageName, string key) => packageName.Limit(15, "...") + " -> " + key.Limit(15, "...");
+        protected virtual string GetRefTooltip(string packageName, string key) => packageName + " -> " + key;
     }
 }
