@@ -27,7 +27,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
                 {
                     Debug.Log("Unable to find localization settings, create new");
 
-                    settings = new LocalizationSettings();
+                    settings = ScriptableObject.CreateInstance<LocalizationSettings>();
                     if (!AssetDatabase.IsValidFolder("Assets/Resources"))
                     {
                         AssetDatabase.CreateFolder("Assets", "Resources");

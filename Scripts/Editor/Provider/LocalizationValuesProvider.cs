@@ -140,6 +140,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         {
             _packagesObjects = _settings.FindProperties("packages")
                 .Select(x => new SerializedObject(x.objectReferenceValue))
+                .OrderBy(x => x.FindProperty("name").stringValue)
                 .ToArray();
         }
     }
