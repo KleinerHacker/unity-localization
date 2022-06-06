@@ -99,14 +99,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
                 row.AddColumns(addedList);
             }
         }
-
-        private void OnValidate()
-        {
-            if (!LocalizationSettings.Singleton.Packages.Contains(this))
-            {
-                LocalizationSettings.Singleton.AddPackage(this);
-            }
-        }
 #endif
     }
 }

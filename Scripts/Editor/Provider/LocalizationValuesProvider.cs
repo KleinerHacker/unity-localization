@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils.Extensions;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityLocalization.Editor.localization.Scripts.Editor.Utils;
 using UnityLocalization.Runtime.localization.Scripts.Runtime;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
 
@@ -112,6 +111,20 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             if (!anyOpened)
             {
                 _packageFold = -1;
+            }
+
+            if (GUILayout.Button("Search for language packages in project"))
+            {
+                var packages = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))
+                    .Select(AssetDatabase.GUIDToAssetPath)
+                    .Select(AssetDatabase.LoadAssetAtPath<LocalizationPackage>)
+                    .ToArray();
+
+                ((LocalizationSettings)_settings.targetObject).Packages = packages;
+                EditorUtility.SetDirty(_settings.targetObject);
+                
+                UpdatePackages();
+                UpdatePackageLists();
             }
 
             _settings.ApplyModifiedProperties();

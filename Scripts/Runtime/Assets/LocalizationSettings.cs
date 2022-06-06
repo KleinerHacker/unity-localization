@@ -98,16 +98,17 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
         public LocalizationTextEditing TextEditing => textEditing;
 
-        public LocalizationPackage[] Packages => packages;
+        public LocalizationPackage[] Packages
+        {
+            get => packages;
+#if UNITY_EDITOR
+            set => packages = value;
+#endif
+        }
 
         #endregion
 
 #if UNITY_EDITOR
-        public void AddPackage(LocalizationPackage package)
-        {
-            packages = packages.Append(package).ToArray();
-        }
-        
         public void UpdateSupportedLanguages()
         {
             var packages = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))

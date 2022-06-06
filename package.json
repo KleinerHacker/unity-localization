@@ -1,6 +1,6 @@
 {
   "name": "org.pcsoft.localization",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "displayName": "Unity Localization",
   "description": "Localization system for Unity games.",
   "unity": "2021.3",
@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "org.pcsoft.editor-ex":"1.1.8",
-    "org.pcsoft.common-ex":"1.1.4",
+    "org.pcsoft.common-ex":"1.1.6",
     "org.pcsoft.asset-loader":"1.1.0"
   },
   "author": {
