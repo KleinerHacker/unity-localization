@@ -1,6 +1,6 @@
 {
   "name": "org.pcsoft.localization",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "displayName": "Unity Localization",
   "description": "Localization system for Unity games.",
   "unity": "2021.3",
@@ -12,9 +12,9 @@
     "locale"
   ],
   "dependencies": {
-    "org.pcsoft.editor-ex":"1.1.8",
-    "org.pcsoft.common-ex":"1.1.6",
-    "org.pcsoft.asset-loader":"1.1.0"
+    "org.pcsoft.editor-ex":"1.1.12",
+    "org.pcsoft.common-ex":"1.1.8",
+    "org.pcsoft.asset-loader":"2.0.0"
   },
   "author": {
     "name": "Pfeiffer C Soft",

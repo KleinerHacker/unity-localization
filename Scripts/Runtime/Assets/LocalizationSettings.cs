@@ -1,52 +1,19 @@
 using System;
 using System.Linq;
 using UnityEditor;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Assets;
 using UnityEngine;
-using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils;
-#if !UNITY_EDITOR
-using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
-#endif
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 {
-    public sealed class LocalizationSettings : ScriptableObject
+    public sealed class LocalizationSettings : ProviderAsset<LocalizationSettings>
     {
         #region Static Area
 
-#if UNITY_EDITOR
-        private const string Path = "Assets/Resources/localization.asset";
-#endif
-
-        public static LocalizationSettings Singleton
-        {
-            get
-            {
-#if UNITY_EDITOR
-                var settings = AssetDatabase.LoadAssetAtPath<LocalizationSettings>(Path);
-                if (settings == null)
-                {
-                    Debug.Log("Unable to find localization settings, create new");
-
-                    settings = ScriptableObject.CreateInstance<LocalizationSettings>();
-                    if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-                    {
-                        AssetDatabase.CreateFolder("Assets", "Resources");
-                    }
-
-                    AssetDatabase.CreateAsset(settings, Path);
-                    AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
-                }
-
-                return settings;
-#else
-                return AssetResourcesLoader.Instance.GetAsset<LocalizationSettings>();
-#endif
-            }
-        }
+        public static LocalizationSettings Singleton => GetSingleton("Localization", "localization.asset");
 
 #if UNITY_EDITOR
-        public static SerializedObject SerializedSingleton => new SerializedObject(Singleton);
+        public static SerializedObject SerializedSingleton => GetSerializedSingleton("Localization", "localization.asset");
 #endif
 
         #endregion

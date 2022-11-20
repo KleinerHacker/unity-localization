@@ -1,4 +1,4 @@
-using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime.Loader;
+using UnityAssetLoader.Runtime.asset_loader.Scripts.Runtime;
 using UnityEngine;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
 
@@ -10,7 +10,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime
         public static void Initialize()
         {
             Debug.Log("Load localization info...");
-            AssetResourcesLoader.Instance.LoadAssets<LocalizationSettings>("");
+            AssetResourcesLoader.LoadFromResources<LocalizationSettings>("");
         }
     }
 }
