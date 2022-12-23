@@ -132,20 +132,31 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
             for (var i = 0; i < _packagesObjects.Length; i++)
             {
-                _textRowList[i] = new LocalizationTextList(_packagesObjects[i], _packagesObjects[i].FindProperty("textRows"));
-                _spriteRowList[i] = new LocalizationSpriteList(_packagesObjects[i], _packagesObjects[i].FindProperty("spriteRows"));
-                _materialRowList[i] = new LocalizationMaterialList(_packagesObjects[i], _packagesObjects[i].FindProperty("materialRows"));
+                _textRowList[i] = new LocalizationTextList(_packagesObjects[i], _packagesObjects[i].FindProperty("textRows"), _settings.FindProperty("supportedLanguages"));
+                _spriteRowList[i] = new LocalizationSpriteList(_packagesObjects[i], _packagesObjects[i].FindProperty("spriteRows"), _settings.FindProperty("supportedLanguages"));
+                _materialRowList[i] = new LocalizationMaterialList(_packagesObjects[i], _packagesObjects[i].FindProperty("materialRows"), _settings.FindProperty("supportedLanguages"));
             }
         }
 
         private void UpdatePackages()
         {
-            _packagesObjects = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))
+            #if LOG_LOCALIZATION
+            Debug.Log("[LOCALIZATION] Search for packages");
+            #endif
+
+            var allPackages = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Select(AssetDatabase.LoadAssetAtPath<LocalizationPackage>)
+                .ToArray();
+            _packagesObjects = allPackages
                 .Where(x => !x.HidePackage)
                 .Select(x => new SerializedObject(x))
                 .ToArray();
+            
+            #if LOG_LOCALIZATION
+            Debug.Log("[LOCALIZATION] Found packages: " + allPackages.Length);
+            Debug.Log("[LOCALIZATION] > " + string.Join(", ", allPackages.Select(x => x.Name + (x.HidePackage ? " (Hidden)" : ""))));
+            #endif
         }
     }
 }
