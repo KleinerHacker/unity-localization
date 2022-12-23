@@ -27,25 +27,10 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         private SystemLanguage fallbackLanguage = SystemLanguage.English;
 
         [SerializeField]
-        [Obsolete]
-        private LocalizedTextRow[] textRows = Array.Empty<LocalizedTextRow>();
-
-        [SerializeField]
-        [Obsolete]
-        private LocalizedSpriteRow[] spriteRows = Array.Empty<LocalizedSpriteRow>();
-
-        [SerializeField]
-        [Obsolete]
-        private LocalizedMaterialRow[] materialRows = Array.Empty<LocalizedMaterialRow>();
-
-        [SerializeField]
         private LocalizationTransliteration[] transliterations = Array.Empty<LocalizationTransliteration>();
 
         [SerializeField]
         private LocalizationTextEditing textEditing = LocalizationTextEditing.None;
-
-        [SerializeField]
-        private LocalizationPackage[] packages = Array.Empty<LocalizationPackage>();
 
         #endregion
 
@@ -64,14 +49,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
         public LocalizationTransliteration[] Transliterations => transliterations;
 
         public LocalizationTextEditing TextEditing => textEditing;
-
-        public LocalizationPackage[] Packages
-        {
-            get => packages;
-#if UNITY_EDITOR
-            set => packages = value;
-#endif
-        }
 
         #endregion
 

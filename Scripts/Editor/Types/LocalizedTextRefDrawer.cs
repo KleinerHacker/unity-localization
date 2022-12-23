@@ -38,13 +38,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
             }
         }
 
-        protected override string GetRefHint(string packageName, string key)
+        protected override string GetRefHint(LocalizationPackage package, string key)
         {
-            var settings = LocalizationSettings.Singleton;
-            
-            var package = settings.Packages.FirstOrDefault(x => string.Equals(x.Name, packageName));
             if (package == null)
-                return "<unknown>";
+                return "Package not found";
+            
+            var settings = LocalizationSettings.Singleton;
 
             var row = package.TextRows.FirstOrDefault(x => string.Equals(x.Key, key));
             if (row == null || row.RawColumns.Length <= 0)

@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityCommonEx.Runtime.common_ex.Scripts.Runtime.Utils.Extensions;
 using UnityEditor;
+using UnityEditorEx.Editor.editor_ex.Scripts.Editor.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityLocalization.Runtime.localization.Scripts.Runtime;
@@ -62,6 +63,10 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
             EditorGUILayout.PropertyField(_textEditingProperty, new GUIContent("Mode for text editing", "This can overwritten in components"));
 
             UnityLocalize.Settings.UpdateSupportedLanguages();
+            
+            EditorGUILayout.Space(25f);
+            ExtendedEditorGUILayout.SymbolField("Verbose Logging", "LOG_LOCALIZATION");
+            
             _settings.ApplyModifiedProperties();
         }
     }

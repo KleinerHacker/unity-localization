@@ -3,19 +3,28 @@ using System.Linq;
 using UnityEngine;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
 using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils.Extensions;
+using Object = UnityEngine.Object;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
 {
     internal static class LocalizationUtils
     {
-        public static string GetTextValue(string key, string package, LocalizationTextEditing? overrideTextEditing)
+        public static string GetTextValue(string key, LocalizationPackage package, LocalizationTextEditing? overrideTextEditing)
         {
+#if LOG_LOCALIZATION
+            Debug.Log("[LOCALIZATION] Try to retrieve text for key " + key + " in package " + (package?.Name ?? "<default>"));
+#endif
+
             var textElement = GetValue<string, LocalizedTextRow>(key, package);
             if (textElement == null)
                 return null;
-            
+
             var text = textElement.Value;
-            
+
             //Transliteration
             var transliteration = LocalizationSettings.Singleton.Transliterations.FirstOrDefault(x => x.Language == textElement.Language);
             if (transliteration != null)
@@ -33,22 +42,22 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
                 _ => throw new NotImplementedException()
             };
 
+#if LOG_LOCALIZATION
+            Debug.Log("[LOCALIZATION] Retrieved text is " + text);
+#endif
             return text;
         }
 
-        public static Sprite GetSpriteValue(string key, string package) => GetValue<Sprite, LocalizedSpriteRow>(key, package)?.Value;
+        public static Sprite GetSpriteValue(string key, LocalizationPackage package) => GetValue<Sprite, LocalizedSpriteRow>(key, package)?.Value;
 
-        public static Material GetMaterialValue(string key, string package) => GetValue<Material, LocalizedMaterialRow>(key, package)?.Value;
+        public static Material GetMaterialValue(string key, LocalizationPackage package) => GetValue<Material, LocalizedMaterialRow>(key, package)?.Value;
 
-        private static LocalizedElement<T> GetValue<T, TR>(string key, string package) where TR : LocalizedRow<T> where T : class
+        private static LocalizedElement<T> GetValue<T, TR>(string key, LocalizationPackage package) where TR : LocalizedRow<T> where T : class
         {
-            if (string.IsNullOrEmpty(package))
+            if (package == null)
                 return default;
 
-            var rows = LocalizationSettings.Singleton.Packages.FirstOrDefault(x => string.Equals(x.Name, package, StringComparison.Ordinal))?.Rows;
-            if (rows == null)
-                throw new InvalidOperationException("Package with name '" + package + "' not found in localization settings");
-            
+            var rows = package.Rows;
             var row = rows.FirstOrDefault(x => string.Equals(x.Key, key, StringComparison.Ordinal));
             if (row == null)
                 return default;
@@ -57,5 +66,31 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Utils
 
             return typedRow.Columns.Find();
         }
+
+#if UNITY_EDITOR
+        public static void Migrate(Object context, ref string package, ref LocalizationPackage packageRef)
+        {
+            //Migration
+            if (!string.IsNullOrEmpty(package))
+            {
+#if LOG_LOCALIZATION
+                Debug.Log("[LOCALIZATION] Migrate localization object", context);
+#endif
+
+                var p = package;
+                packageRef = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))
+                    .Select(AssetDatabase.GUIDToAssetPath)
+                    .Select(AssetDatabase.LoadAssetAtPath<LocalizationPackage>)
+                    .FirstOrDefault(x => x.Name == p);
+                if (packageRef == null)
+                {
+                    Debug.LogWarning("[LOCALIZATION] Unable to find package " + package + ", migration failed", context);
+                }
+
+                package = null;
+                EditorSceneManager.MarkAllScenesDirty();
+            }
+        }
+#endif
     }
 }

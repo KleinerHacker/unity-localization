@@ -7,6 +7,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Types
     [Serializable]
     public sealed class LocalizedMaterialRef : LocalizedRef
     {
-        public static implicit operator Material(LocalizedMaterialRef textRef) => LocalizationUtils.GetMaterialValue(textRef.Key, textRef.Package);
+        public static implicit operator Material(LocalizedMaterialRef textRef) => LocalizationUtils.GetMaterialValue(textRef.Key, textRef.PackageRef);
     }
 }

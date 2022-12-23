@@ -1,5 +1,11 @@
+using System;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Extra;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
+using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
+using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 {
@@ -10,12 +16,27 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
         [SerializeField]
         protected string key;
 
+        [Obsolete("Use " + nameof(packageRef) + " instead")]
         [SerializeField]
         protected string package;
+
+        [AssetChooser(typeof(LocalizationPackage))]
+        [SerializeField]
+        protected LocalizationPackage packageRef;
 
         #endregion
 
         internal abstract void UpdateLanguage();
+
+        #region Builtin Methods
+
+#if UNITY_EDITOR
+
+        protected virtual void OnValidate() => LocalizationUtils.Migrate(this, ref package, ref packageRef);
+
+#endif
+
+        #endregion
     }
 
     public abstract class LocalizedBehavior<T, TE> : LocalizedBehavior where TE : Component
@@ -29,7 +50,11 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
         protected virtual void Start() => UpdateValue(_element);
 
 #if UNITY_EDITOR
-        private void OnValidate() => UpdateValue(GetComponent<TE>());
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+            UpdateValue(GetComponent<TE>());
+        }
 
 #endif
 
@@ -37,14 +62,14 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 
         private void UpdateValue(TE element)
         {
-            var value = GetValue(key, package);
+            var value = GetValue(key, packageRef);
             if (value != null)
             {
                 UpdateElement(value, element);
             }
         }
 
-        protected abstract T GetValue(string key, string package);
+        protected abstract T GetValue(string key, LocalizationPackage package);
         protected abstract void UpdateElement(T value, TE element);
 
         internal sealed override void UpdateLanguage()
@@ -52,13 +77,17 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying)
             {
-                Debug.Log("Update language in editor");
+#if LOG_LOCALIZATION
+                Debug.Log("[LOCALIZATION] Update language in editor");
+#endif
                 UpdateValue(GetComponent<TE>());
             }
             else
             {
 #endif
-                Debug.Log("Update language in play mode");
+#if LOG_LOCALIZATION
+                Debug.Log("[LOCALIZATION] Update language in play mode");
+#endif
                 UpdateValue(_element);
 #if UNITY_EDITOR
             }

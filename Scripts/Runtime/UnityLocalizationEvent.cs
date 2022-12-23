@@ -9,8 +9,11 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
         public static void Initialize()
         {
-            Debug.Log("Load localization info...");
+            Debug.Log("[LOCALIZATION] Load localization info...");
             AssetResourcesLoader.LoadFromResources<LocalizationSettings>("");
+#if LOG_LOCALIZATION
+            Debug.Log("[LOCALIZATION] > Localizations supported: " + string.Join(", ", AssetResources.GetAsset<LocalizationSettings>().SupportedLanguages));
+#endif
         }
     }
 }

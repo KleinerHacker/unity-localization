@@ -15,19 +15,19 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
         protected virtual void OnEnable()
         {
             _keyProperty = serializedObject.FindProperty("key");
-            _packageProperty = serializedObject.FindProperty("package");
+            _packageProperty = serializedObject.FindProperty("packageRef");
         }
 
         public sealed override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            var packageName = string.IsNullOrEmpty(_packageProperty.stringValue) ? "<default>" : _packageProperty.stringValue;
+            var packageRef = _packageProperty.objectReferenceValue;
             var keyName = _keyProperty.stringValue;
-            _foldout = EditorGUILayout.BeginFoldoutHeaderGroup(_foldout, new GUIContent("Key (" + packageName + " -> " + keyName + ")"));
+            _foldout = EditorGUILayout.BeginFoldoutHeaderGroup(_foldout, new GUIContent("Key (" + (packageRef == null ? "<default>" : ((LocalizationPackage)packageRef).Name) + " -> " + keyName + ")"));
             if (_foldout)
             {
-                LocalizedEditorUtils.LayoutPackageFilter(_packageProperty);
+                EditorGUILayout.PropertyField(_packageProperty, new GUIContent("Package"));
                 
                 if (string.IsNullOrWhiteSpace(keyName))
                 {
