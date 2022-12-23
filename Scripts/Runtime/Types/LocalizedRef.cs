@@ -1,5 +1,9 @@
 using System;
+using UnityEditorEx.Runtime.editor_ex.Scripts.Runtime.Extra;
 using UnityEngine;
+using UnityLocalization.Runtime.localization.Scripts.Runtime.Assets;
+using UnityLocalization.Runtime.localization.Scripts.Runtime.Utils;
+using Object = UnityEngine.Object;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Types
 {
@@ -11,8 +15,13 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Types
         [SerializeField]
         private string key;
 
+        [Obsolete("Use " + nameof(packageRef) + " instead")]
         [SerializeField]
         private string package;
+
+        [AssetChooser(typeof(LocalizationPackage))]
+        [SerializeField]
+        private LocalizationPackage packageRef;
 
         #endregion
 
@@ -20,8 +29,12 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Types
 
         public string Key => key;
 
-        public string Package => package;
+        public LocalizationPackage PackageRef => packageRef;
 
         #endregion
+
+#if UNITY_EDITOR
+        public void MigrateOnValidate(Object context) => LocalizationUtils.Migrate(context, ref package, ref packageRef);
+#endif
     }
 }

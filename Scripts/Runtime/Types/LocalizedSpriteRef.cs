@@ -7,6 +7,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Types
     [Serializable]
     public sealed class LocalizedSpriteRef : LocalizedRef
     {
-        public static implicit operator Sprite(LocalizedSpriteRef textRef) => LocalizationUtils.GetSpriteValue(textRef.Key, textRef.Package);
+        public static implicit operator Sprite(LocalizedSpriteRef textRef) => LocalizationUtils.GetSpriteValue(textRef.Key, textRef.PackageRef);
     }
 }

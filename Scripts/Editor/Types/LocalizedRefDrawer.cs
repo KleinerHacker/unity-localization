@@ -14,15 +14,15 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         public sealed override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var keyProperty = property.FindPropertyRelative("key");
-            var packageProperty = property.FindPropertyRelative("package");
-            var packageName = packageProperty.stringValue;
+            var packageProperty = property.FindPropertyRelative("packageRef");
+            var package = (LocalizationPackage) packageProperty.objectReferenceValue;
 
             position = EditorGUI.IndentedRect(position);
             _foldout = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x, position.y, position.width, lineHeight), _foldout, 
-                new GUIContent(property.displayName + " (" + GetRefHint(packageName, keyProperty.stringValue) + ")", GetRefTooltip(packageName, keyProperty.stringValue)));
+                new GUIContent(property.displayName + " (" + GetRefHint(package, keyProperty.stringValue) + ")", GetRefTooltip(package, keyProperty.stringValue)));
             if (_foldout)
             {
-                LocalizedEditorUtils.LayoutPackageFilter(packageProperty, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
+                EditorGUI.PropertyField(new Rect(position.x, position.y + lineHeight, position.width, lineHeight), packageProperty);
                 position = CalculateNext(position);
                 LocalizedEditorUtils.LayoutRowFilter(keyProperty.displayName, keyProperty, packageProperty, OnFilterRow, new Rect(position.x, position.y + lineHeight, position.width, lineHeight));
                 position = CalculateNext(position);
@@ -47,7 +47,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
 
         protected virtual float DoGetPropertyHeight(SerializedProperty property) => lineHeight;
         
-        protected virtual string GetRefHint(string packageName, string key) => packageName.Limit(15, "...") + " -> " + key.Limit(15, "...");
-        protected virtual string GetRefTooltip(string packageName, string key) => packageName + " -> " + key;
+        protected virtual string GetRefHint(LocalizationPackage package, string key) => package.Name.Limit(15, "...") + " -> " + key.Limit(15, "...");
+        protected virtual string GetRefTooltip(LocalizationPackage package, string key) => package?.Name + " -> " + key;
     }
 }

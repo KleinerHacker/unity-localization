@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
@@ -199,6 +200,7 @@ MonoBehaviour:
   m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &714061347
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +253,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: text/title
-  package: Demo/Text
+  package: 
+  packageRef: {fileID: 11400000, guid: be69d268d268b244993c79d4dd84c5ff, type: 2}
   overrideTextEditing: 0
   overriddenTextEditing: 0
 --- !u!114 &714061350
@@ -390,7 +393,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: btn/demo
-  package: Demo/Text
+  package: 
+  packageRef: {fileID: 11400000, guid: be69d268d268b244993c79d4dd84c5ff, type: 2}
   overrideTextEditing: 0
   overriddenTextEditing: 0
 --- !u!1 &1030662599
@@ -545,14 +549,17 @@ MonoBehaviour:
   textRef:
     key: dialog/a
     package: 
+    packageRef: {fileID: 0}
     overrideTextEditing: 0
     overriddenTextEditing: 0
   spriteRef:
     key: sprite/key
     package: 
+    packageRef: {fileID: 0}
   materialRef:
     key: material/key
     package: 
+    packageRef: {fileID: 0}
 --- !u!114 &1030662605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,6 +687,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1872843889}
   - component: {fileID: 1872843888}
+  - component: {fileID: 1872843890}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -764,6 +772,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1872843890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872843887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1926316628
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,7 +1004,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: text/message
-  package: Demo/Text
+  package: 
+  packageRef: {fileID: 11400000, guid: be69d268d268b244993c79d4dd84c5ff, type: 2}
   overrideTextEditing: 0
   overriddenTextEditing: 0
 --- !u!114 &2144119372

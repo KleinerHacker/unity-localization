@@ -13,14 +13,18 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime
             get => _currentLanguage;
             set
             {
+#if LOG_LOCALIZATION
+                Debug.Log("[LOCALIZATION] Change language to " + value);
+#endif
+
                 _currentLanguage = value;
-                foreach (var behavior in GameObject.FindObjectsOfType<LocalizedBehavior>())
+                foreach (var behavior in Object.FindObjectsOfType<LocalizedBehavior>())
                 {
                     behavior.UpdateLanguage();
                 }
             }
         }
-        
+
         public static LocalizationSettings Settings => LocalizationSettings.Singleton;
     }
 }

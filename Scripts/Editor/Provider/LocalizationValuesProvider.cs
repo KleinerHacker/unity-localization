@@ -27,12 +27,11 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         private LocalizationList[] _textRowList;
         private LocalizationList[] _spriteRowList;
         private LocalizationList[] _materialRowList;
-        
+
         private int _packageFold = -1;
-        
+
         public LocalizationValuesProvider() : base("Project/Localization/Values", SettingsScope.Project, new[] { "Localization", "Locale", "Language", "Value", "Key", "Package" })
         {
-            
         }
 
         public override void OnActivate(string searchContext, VisualElement rootElement)
@@ -48,7 +47,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         public override void OnGUI(string searchContext)
         {
             _settings.Update();
-            
+
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Packages", EditorStyles.boldLabel);
@@ -64,7 +63,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
                 var packageName = packageObject.FindProperty("name").stringValue;
                 var packageObj = _packagesObjects.FirstOrDefault(x => x.FindProperty("name").stringValue == packageName);
                 var package = (LocalizationPackage)packageObj?.targetObject;
-                
+
                 var keyDoublet = package?.Rows.GroupBy(x => x.Key).Any(x => x.Count() > 1) ?? false;
 
                 var opened = EditorGUILayout.BeginFoldoutHeaderGroup(_packageFold == i, string.IsNullOrEmpty(packageName) ? "<default>" : packageName);
@@ -73,13 +72,14 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
                     anyOpened = true;
                     _packageFold = i;
                 }
+
                 if (_packageFold == i)
                 {
                     if (i != 0)
                     {
                         EditorGUILayout.PropertyField(packageObject.FindProperty("name"), new GUIContent("Package Name:"));
                     }
-                    
+
                     if (keyDoublet)
                     {
                         EditorGUILayout.HelpBox("There are key doublets. Please fix this to avoid wrong text choices.", MessageType.Warning);
@@ -103,11 +103,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
                         EditorGUILayout.HelpBox("Please fix doublet problem above!", MessageType.Error);
                     }
                 }
+
                 EditorGUILayout.EndFoldoutHeaderGroup();
-                
+
                 packageObject.ApplyModifiedProperties();
             }
-            
+
             if (!anyOpened)
             {
                 _packageFold = -1;
@@ -115,15 +116,6 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
             if (GUILayout.Button("Search for language packages in project"))
             {
-                var packages = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))
-                    .Select(AssetDatabase.GUIDToAssetPath)
-                    .Select(AssetDatabase.LoadAssetAtPath<LocalizationPackage>)
-                    .ToArray();
-
-                ((LocalizationSettings)_settings.targetObject).Packages = packages;
-                EditorUtility.SetDirty(_settings.targetObject);
-                
-                UpdatePackages();
                 UpdatePackageLists();
             }
 
@@ -132,29 +124,27 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         private void UpdatePackageLists()
         {
-            _settings.ApplyModifiedProperties();
-            _settings.Update();
-            
             UpdatePackages();
-            
+
             _textRowList = new LocalizationList[_packagesObjects.Length];
             _spriteRowList = new LocalizationList[_packagesObjects.Length];
             _materialRowList = new LocalizationList[_packagesObjects.Length];
 
             for (var i = 0; i < _packagesObjects.Length; i++)
             {
-                _textRowList[i] = new LocalizationTextList(_settings, _packagesObjects[i].FindProperty("textRows"));
-                _spriteRowList[i] = new LocalizationSpriteList(_settings, _packagesObjects[i].FindProperty("spriteRows"));
-                _materialRowList[i] = new LocalizationMaterialList(_settings, _packagesObjects[i].FindProperty("materialRows"));
+                _textRowList[i] = new LocalizationTextList(_packagesObjects[i], _packagesObjects[i].FindProperty("textRows"));
+                _spriteRowList[i] = new LocalizationSpriteList(_packagesObjects[i], _packagesObjects[i].FindProperty("spriteRows"));
+                _materialRowList[i] = new LocalizationMaterialList(_packagesObjects[i], _packagesObjects[i].FindProperty("materialRows"));
             }
         }
 
         private void UpdatePackages()
         {
-            _packagesObjects = _settings.FindProperties("packages")
-                .Select(x => new SerializedObject(x.objectReferenceValue))
-                .Where(x => !x.FindProperty("hidePackage").boolValue)
-                .OrderBy(x => x.FindProperty("name").stringValue)
+            _packagesObjects = AssetDatabase.FindAssets("t:" + nameof(LocalizationPackage))
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<LocalizationPackage>)
+                .Where(x => !x.HidePackage)
+                .Select(x => new SerializedObject(x))
                 .ToArray();
         }
     }

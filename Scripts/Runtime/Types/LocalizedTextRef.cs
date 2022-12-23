@@ -19,6 +19,6 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Types
         #endregion
         
         public static implicit operator string(LocalizedTextRef textRef) => 
-            LocalizationUtils.GetTextValue(textRef.Key, textRef.Package, textRef.overrideTextEditing ? textRef.overriddenTextEditing : (LocalizationTextEditing?)null);
+            LocalizationUtils.GetTextValue(textRef.Key, textRef.PackageRef, textRef.overrideTextEditing ? textRef.overriddenTextEditing : null);
     }
 }
