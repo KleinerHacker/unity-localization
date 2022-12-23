@@ -15,9 +15,9 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
         private SerializedProperty _supportedLanguagesProperty;
 
-        protected LocalizationList(SerializedObject serializedObject, SerializedProperty elements) : base(serializedObject, elements)
+        protected LocalizationList(SerializedObject serializedObject, SerializedProperty elements, SerializedProperty supportedLanguagesProperty) : base(serializedObject, elements)
         {
-            _supportedLanguagesProperty = serializedObject.FindProperty("supportedLanguages");
+            _supportedLanguagesProperty = supportedLanguagesProperty;
 
             drawHeaderCallback += OnDrawHeaderCallback;
             drawElementCallback += OnDrawElementCallback;

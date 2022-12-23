@@ -1,6 +1,6 @@
 {
   "name": "org.pcsoft.localization",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "displayName": "Unity Localization",
   "description": "Localization system for Unity games.",
   "unity": "2021.3",
