@@ -25,7 +25,7 @@ MonoBehaviour:
       value: my.key
     - language: 35
       value: my.key
-    - language: 13
+    - language: 30
       value: my.key
   - key: text/title
     columns:
@@ -37,7 +37,7 @@ MonoBehaviour:
       value: my.key
     - language: 35
       value: my.key
-    - language: 13
+    - language: 30
       value: my.key
   - key: text/message
     columns:
@@ -49,7 +49,7 @@ MonoBehaviour:
       value: my.key
     - language: 35
       value: my.key
-    - language: 13
+    - language: 30
       value: my.key
   spriteRows: []
   materialRows: []

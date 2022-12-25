@@ -47,6 +47,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         public override void OnGUI(string searchContext)
         {
             _settings.Update();
+            UnityLocalize.Settings.UpdateSupportedLanguages();
 
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();

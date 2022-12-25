@@ -85,8 +85,17 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
             foreach (var row in Rows)
             {
                 if (row.RawColumns.Length == supportedLanguages.Length)
+                {
+                    //Repair if required
+                    for (var i = 0; i < row.RawColumns.Length; i++)
+                    {
+                        row.RawColumns[i].Language = supportedLanguages[i];
+                    }
+                    
                     continue;
+                }
 
+                //Update if required
                 var addedList = supportedLanguages
                     .Where(x => !row.RawColumns.Select(y => y.Language).Contains(x))
                     .ToArray();
