@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 {
@@ -9,8 +10,9 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
     {
         #region Inspector Data
 
+        [FormerlySerializedAs("name")]
         [SerializeField]
-        private string name = Guid.NewGuid().ToString();
+        private string packageName = Guid.NewGuid().ToString();
 
         [SerializeField]
         private bool hidePackage;
@@ -31,9 +33,9 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Assets
 
         public string Name
         {
-            get => name;
+            get => packageName;
 #if UNITY_EDITOR
-            set => name = value;
+            set => packageName = value;
 #endif
         }
 

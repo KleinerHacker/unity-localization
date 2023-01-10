@@ -32,7 +32,9 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
 
 #if UNITY_EDITOR
 
+#pragma warning disable CS0618
         protected virtual void OnValidate() => LocalizationUtils.Migrate(this, ref package, ref packageRef);
+#pragma warning restore CS0618
 
 #endif
 
