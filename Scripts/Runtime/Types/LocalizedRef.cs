@@ -34,7 +34,9 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Types
         #endregion
 
 #if UNITY_EDITOR
+#pragma warning disable CS0618
         public void MigrateOnValidate(Object context) => LocalizationUtils.Migrate(context, ref package, ref packageRef);
+#pragma warning restore CS0618
 #endif
     }
 }
