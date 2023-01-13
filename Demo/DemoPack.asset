@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea9f2e460df49ee9b74e90e60522093, type: 3}
   m_Name: DemoPack
   m_EditorClassIdentifier: 
-  name: Demo/Text
+  packageName: Demo/Text
   hidePackage: 1
   textRows:
   - key: btn/demo
