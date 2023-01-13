@@ -65,7 +65,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
         private void UpdateValue(TE element)
         {
             #if LOG_LOCALIZATION
-            Debug.Log("[LOCALIZATION] Get value for key " + key + " in package " + packageRef.Name, this);
+            Debug.Log("[LOCALIZATION] Get value for key " + key + " in package " + (packageRef != null ? packageRef.Name : "<?>"), this);
             #endif
             
             var value = GetValue(key, packageRef);
@@ -78,7 +78,7 @@ namespace UnityLocalization.Runtime.localization.Scripts.Runtime.Components
             }
             else
             {
-                Debug.LogWarning("[LOCALIZATION] Unable to find value for key " + key + " in package " + packageRef.Name, this);
+                Debug.LogWarning("[LOCALIZATION] Unable to find value for key " + key + " in package " + (packageRef != null ? packageRef.Name : "<?>"), this);
             }
         }
 

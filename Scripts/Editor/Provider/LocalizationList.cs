@@ -11,7 +11,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
         private const float LeftMargin = 15f;
         private const float SpaceMargin = 5f;
         private const float BottomMargin = 2f;
-        private const float Height = 20f;
+        protected const float Height = 20f;
 
         private SerializedProperty _supportedLanguagesProperty;
 
@@ -56,17 +56,20 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Provider
 
             var parts = rect.width / (_supportedLanguagesProperty.arraySize + 1);
 
-            var pos = new Rect(rect.x, rect.y, parts - SpaceMargin, rect.height - BottomMargin);
+            var pos = new Rect(rect.x, rect.y + 1f, parts - SpaceMargin, Height);
             EditorGUI.PropertyField(pos, keyProperty, GUIContent.none);
 
             for (var i = 0; i < _supportedLanguagesProperty.arraySize; i++)
             {
                 var valueProperty = columnsProperty.GetArrayElementAtIndex(i).FindPropertyRelative("value");
 
-                pos = new Rect(rect.x + parts * (i + 1), rect.y, parts - SpaceMargin, rect.height - BottomMargin);
-                EditorGUI.PropertyField(pos, valueProperty, GUIContent.none);
+                pos = new Rect(rect.x + parts * (i + 1), rect.y + 1f, parts - SpaceMargin, rect.height - BottomMargin);
+                DrawPropertyField(pos, valueProperty);
             }
         }
+
+        protected virtual void DrawPropertyField(Rect rect, SerializedProperty valueProperty) => 
+            EditorGUI.PropertyField(rect, valueProperty, GUIContent.none);
 
         private void OnAddCallback(ReorderableList list)
         {
