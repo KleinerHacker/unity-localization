@@ -15,11 +15,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         {
             var keyProperty = property.FindPropertyRelative("key");
             var packageProperty = property.FindPropertyRelative("packageRef");
-            var package = (LocalizationPackage) packageProperty.objectReferenceValue;
+            var package = (LocalizationPackage)packageProperty.objectReferenceValue;
 
             position = EditorGUI.IndentedRect(position);
-            _foldout = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x, position.y, position.width, lineHeight), _foldout, 
-                new GUIContent(property.displayName + " (" + GetRefHint(package, keyProperty.stringValue) + ")", GetRefTooltip(package, keyProperty.stringValue)));
+            _foldout = EditorGUI.BeginFoldoutHeaderGroup(new Rect(position.x, position.y, position.width, lineHeight), _foldout,
+                new GUIContent(property.displayName + " (" + GetRefHint(package, keyProperty.stringValue) + ")", GetRefTooltip(package, keyProperty.stringValue)),
+                new GUIStyle(EditorStyles.foldoutHeader) { clipping = TextClipping.Clip });
             if (_foldout)
             {
                 EditorGUI.PropertyField(new Rect(position.x, position.y + lineHeight, position.width, lineHeight), packageProperty);
@@ -28,6 +29,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
                 position = CalculateNext(position);
                 DoOnGUI(position, property);
             }
+
             EditorGUI.EndFoldoutHeaderGroup();
         }
 
@@ -46,7 +48,7 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Types
         }
 
         protected virtual float DoGetPropertyHeight(SerializedProperty property) => lineHeight;
-        
+
         protected virtual string GetRefHint(LocalizationPackage package, string key) => package.Name.Limit(15, "...") + " -> " + key.Limit(15, "...");
         protected virtual string GetRefTooltip(LocalizationPackage package, string key) => package?.Name + " -> " + key;
     }

@@ -24,11 +24,12 @@ namespace UnityLocalization.Editor.localization.Scripts.Editor.Components
 
             var packageRef = _packageProperty.objectReferenceValue;
             var keyName = _keyProperty.stringValue;
-            _foldout = EditorGUILayout.BeginFoldoutHeaderGroup(_foldout, new GUIContent("Key (" + (packageRef == null ? "<default>" : ((LocalizationPackage)packageRef).Name) + " -> " + keyName + ")"));
+            _foldout = EditorGUILayout.BeginFoldoutHeaderGroup(_foldout, new GUIContent("Key (" + (packageRef == null ? "<default>" : ((LocalizationPackage)packageRef).Name) + " -> " + keyName + ")"),
+                new GUIStyle(EditorStyles.foldoutHeader) { clipping = TextClipping.Clip });
             if (_foldout)
             {
                 EditorGUILayout.PropertyField(_packageProperty, new GUIContent("Package"));
-                
+
                 if (string.IsNullOrWhiteSpace(keyName))
                 {
                     EditorGUILayout.HelpBox("No key ist set. Value will not changed at runtime!", MessageType.Warning);
